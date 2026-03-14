@@ -45,6 +45,6 @@ class InvestmentsController < ApplicationController
   end
 
   def investment_params
-    params.require(:investment).permit(:name, :amount, :date, :investment_type)
+    params.require(:investment).permit(:description, :value, :date, :investment_type)
   end
 end
