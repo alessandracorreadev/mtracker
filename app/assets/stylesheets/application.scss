@@ -7,6 +7,9 @@
 @import "bootstrap";
 @import "font-awesome";
 
+// Theme (after Bootstrap so .btn-primary and accent color overrides apply)
+@import "config/theme";
+
 // Your CSS partials
 @import "components/index";
 @import "pages/index";

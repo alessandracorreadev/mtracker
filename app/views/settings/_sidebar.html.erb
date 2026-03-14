@@ -1,0 +1,32 @@
+<div class="settings-sidebar">
+  <h2 class="settings-sidebar-title">
+    <i class="fa-solid fa-gear me-2"></i>
+    Settings
+  </h2>
+  <nav class="settings-nav">
+    <%= link_to settings_theme_path, class: "settings-nav-link #{'active' if request.path == settings_theme_path}" do %>
+      <i class="fa-solid fa-sun me-2"></i>
+      Theme
+    <% end %>
+    <%= link_to settings_password_path, class: "settings-nav-link #{'active' if request.path == settings_password_path}" do %>
+      <i class="fa-solid fa-lock me-2"></i>
+      Password
+    <% end %>
+    <%= link_to settings_email_path, class: "settings-nav-link #{'active' if request.path == settings_email_path}" do %>
+      <i class="fa-solid fa-envelope me-2"></i>
+      Email
+    <% end %>
+    <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "settings-nav-link" do %>
+      <i class="fa-solid fa-people-group me-2"></i>
+      Switch
+    <% end %>
+    <%= link_to settings_support_path, class: "settings-nav-link #{'active' if request.path == settings_support_path}" do %>
+      <i class="fa-solid fa-circle-question me-2"></i>
+      Support
+    <% end %>
+    <%= link_to dashboard_path, class: "settings-nav-link settings-nav-link-back" do %>
+      <i class="fa-solid fa-arrow-left me-2"></i>
+      Voltar
+    <% end %>
+  </nav>
+</div>
