@@ -1,2 +1,19 @@
-<h1>Investments#index</h1>
-<p>Find me in app/views/investments/index.html.erb</p>
+<h1>Investments</h1>
+
+<%= link_to "New Investment", new_investment_path %>
+
+<ul>
+  <% @investments.each do |investment| %>
+    <li>
+      <strong><%= investment.description %></strong>
+      - $<%= investment.value %>
+      - <%= investment.investment_type %>
+      - <%= investment.date %>
+
+      <%= link_to "Show", investment_path(investment) %>
+      <%= link_to "Edit", edit_investment_path(investment) %>
+      <%= link_to "Delete", investment_path(investment),
+      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+    </li>
+  <% end %>
+</ul>

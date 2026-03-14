@@ -1,2 +1,19 @@
-<h1>Expenses#index</h1>
-<p>Find me in app/views/expenses/index.html.erb</p>
+<h1>Expenses</h1>
+
+<%= link_to "New Expense", new_expense_path %>
+
+<ul>
+  <% @expenses.each do |expense| %>
+    <li>
+      <strong><%= expense.description %></strong>
+      - $<%= expense.value %>
+      - <%= expense.expense_type %>
+      - <%= expense.date %>
+
+      <%= link_to "Show", expense_path(expense) %>
+      <%= link_to "Edit", edit_expense_path(expense) %>
+      <%= link_to "Delete", expense_path(expense),
+      data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+    </li>
+  <% end %>
+</ul>

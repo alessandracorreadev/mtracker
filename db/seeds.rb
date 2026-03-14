@@ -7,3 +7,29 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+user = User.first
+
+Expense.create!(
+  value: 20,
+  description: "Lunch",
+  expense_type: "food",
+  date: Date.today,
+  user: user
+)
+
+Expense.create!(
+  value: 10,
+  description: "Bus ticket",
+  expense_type: "transport",
+  date: Date.today,
+  user: user
+)
+
+Expense.create!(
+  value: 50,
+  description: "Internet bill",
+  expense_type: "utilities",
+  date: Date.today,
+  user: user
+)

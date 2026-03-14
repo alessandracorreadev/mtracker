@@ -1,0 +1,27 @@
+<%= form_with model: @expense do |f| %>
+
+  <div>
+    <%= f.label :description %>
+    <%= f.text_field :description %>
+  </div>
+
+  <div>
+    <%= f.label :value %>
+    <%= f.number_field :value %>
+  </div>
+
+  <div>
+    <%= f.label :expense_type %>
+    <%= f.text_field :expense_type %>
+  </div>
+
+  <div>
+    <%= f.label :date %>
+    <%= f.date_field :date %>
+  </div>
+
+  <div>
+    <%= f.submit %>
+  </div>
+
+<% end %>
