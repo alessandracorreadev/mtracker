@@ -10,7 +10,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="dashboard-layout">
+  <body class="dashboard-layout" data-controller="theme">
     <div class="container-fluid g-0 min-vh-100">
       <div class="row g-0 min-vh-100">
         <aside class="dashboard-sidebar col-md-3 col-lg-2">
@@ -40,7 +40,9 @@
           </nav>
 
           <div class="sidebar-footer">
-            <a href="#" class="sidebar-icon" title="Configurações"><i class="fa-solid fa-gear"></i></a>
+            <%= link_to settings_path, class: "sidebar-icon", title: "Configurações" do %>
+              <i class="fa-solid fa-gear"></i>
+            <% end %>
             <a href="#" class="sidebar-icon" title="Alternar"><i class="fa-solid fa-toggle-on"></i></a>
             <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "sidebar-icon", title: "Sair" do %>
               <i class="fa-solid fa-power-off"></i>

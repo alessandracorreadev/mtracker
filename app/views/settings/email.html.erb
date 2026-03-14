@@ -1,0 +1,37 @@
+<div class="settings-section-page">
+  <header class="mb-4">
+    <h1 class="settings-section-title">Email</h1>
+    <p class="text-muted">Atualizar Email</p>
+  </header>
+
+  <div class="card rounded-3 shadow-sm p-4">
+    <%= simple_form_for(current_user, url: update_settings_email_path, method: :patch) do |f| %>
+      <div class="mb-3">
+        <label class="form-label" for="user_current_email">Email atual <abbr title="obrigatório">*</abbr></label>
+        <input type="email"
+               name="user[current_email]"
+               id="user_current_email"
+               class="form-control <%= 'is-invalid' if current_user.errors[:current_email].any? %>"
+               value="<%= params.dig(:user, :current_email).presence || "" %>"
+               autocomplete="email"
+               required
+               aria-label="Email atual">
+        <% if current_user.errors[:current_email].any? %>
+          <div class="invalid-feedback d-block"><%= current_user.errors.full_messages_for(:current_email).to_sentence %></div>
+        <% end %>
+      </div>
+      <%= f.input :email,
+                  label: "Novo email",
+                  required: true,
+                  autofocus: true,
+                  input_html: { autocomplete: "email", value: params.dig(:user, :email).presence || "" } %>
+      <%= f.input :current_password,
+                  label: "Senha",
+                  required: true,
+                  input_html: { autocomplete: "current-password" } %>
+      <div class="text-center mt-3">
+        <%= f.button :submit, "Atualizar", class: "btn-secondary" %>
+      </div>
+    <% end %>
+  </div>
+</div>
