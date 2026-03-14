@@ -1,2 +1,34 @@
 // Import page-specific CSS files here.
 @import "home";
+
+// Dashboard page
+.dashboard-page {
+  .dashboard-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .dashboard-card {
+    .card-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+
+  .dashboard-card-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .expenses-legend .legend-dot {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+}

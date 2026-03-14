@@ -1,6 +1,7 @@
 class InvestmentsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_investment, only: [:show, :edit, :update, :destroy]
+  before_action :set_existing_investment_types, only: [:new, :create, :edit, :update]
 
   def index
     @investments = current_user.investments
@@ -42,6 +43,14 @@ class InvestmentsController < ApplicationController
 
   def set_investment
     @investment = current_user.investments.find(params[:id])
+  end
+
+  def set_existing_investment_types
+    @existing_investment_types = current_user.investments
+      .where.not(investment_type: [nil, ""])
+      .distinct
+      .pluck(:investment_type)
+      .sort
   end
 
   def investment_params

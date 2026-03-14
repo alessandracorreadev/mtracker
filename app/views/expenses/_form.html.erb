@@ -1,0 +1,13 @@
+<%= simple_form_for(@expense) do |f| %>
+  <%= f.input :date, as: :string, label: "Data", input_html: { type: "date" } %>
+  <%= f.input :value, label: "Valor (R$)", input_html: { step: "0.01", min: "0" } %>
+  <%= f.input :expense_type, label: "Categoria", input_html: { list: "expense-types-datalist", placeholder: "Digite ou escolha uma categoria existente" } %>
+  <datalist id="expense-types-datalist">
+    <% (@existing_expense_types || []).each do |type| %>
+      <option value="<%= type %>">
+    <% end %>
+  </datalist>
+  <%= f.input :description, label: "Descrição", input_html: { rows: 2 } %>
+  <%= f.button :submit, @expense.persisted? ? "Atualizar gasto" : "Cadastrar gasto", class: "btn-primary" %>
+  <%= link_to "Cancelar", @expense.persisted? ? expense_path(@expense) : expenses_path, class: "btn btn-outline-secondary ms-2" %>
+<% end %>

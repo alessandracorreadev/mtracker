@@ -1,6 +1,7 @@
 class IncomesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_income, only: [:show, :edit, :update, :destroy]
+  before_action :set_existing_income_types, only: [:new, :create, :edit, :update]
 
   def index
     @incomes = current_user.incomes
@@ -42,6 +43,14 @@ class IncomesController < ApplicationController
 
   def set_income
     @income = current_user.incomes.find(params[:id])
+  end
+
+  def set_existing_income_types
+    @existing_income_types = current_user.incomes
+      .where.not(income_type: [nil, ""])
+      .distinct
+      .pluck(:income_type)
+      .sort
   end
 
   def income_params

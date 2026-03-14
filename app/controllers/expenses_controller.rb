@@ -1,6 +1,7 @@
 class ExpensesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_expense, only: [:show, :edit, :update, :destroy]
+  before_action :set_existing_expense_types, only: [:new, :create, :edit, :update]
 
   def index
     @expenses = current_user.expenses
@@ -42,6 +43,14 @@ class ExpensesController < ApplicationController
 
   def set_expense
     @expense = current_user.expenses.find(params[:id])
+  end
+
+  def set_existing_expense_types
+    @existing_expense_types = current_user.expenses
+      .where.not(expense_type: [nil, ""])
+      .distinct
+      .pluck(:expense_type)
+      .sort
   end
 
   def expense_params
