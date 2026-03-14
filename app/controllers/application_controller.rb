@@ -1,7 +1,11 @@
 class ApplicationController < ActionController::Base
-  before_action :authenticate_user!
+  before_action :authenticate_user!, unless: :devise_controller?
 
   protected
+
+  def devise_controller?
+    controller_path.start_with?("devise/")
+  end
 
   def after_sign_in_path_for(_resource_or_scope)
     dashboard_path

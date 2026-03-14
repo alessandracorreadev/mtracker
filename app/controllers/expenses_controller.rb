@@ -1,4 +1,5 @@
 class ExpensesController < ApplicationController
+  layout "dashboard"
   before_action :authenticate_user!
   before_action :set_expense, only: [:show, :edit, :update, :destroy]
   before_action :set_existing_expense_types, only: [:new, :create, :edit, :update]
