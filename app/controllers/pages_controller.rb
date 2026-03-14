@@ -20,5 +20,11 @@ class PagesController < ApplicationController
       .group(:expense_type)
       .sum(:value)
       .map { |name, total| { name: name, total: total } }
+
+    @investments_by_category = @investments
+      .where.not(investment_type: [nil, ""])
+      .group(:investment_type)
+      .sum(:value)
+      .map { |name, total| { name: name, total: total } }
   end
 end
