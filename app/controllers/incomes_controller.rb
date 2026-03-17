@@ -1,14 +1,11 @@
 class IncomesController < ApplicationController
   layout "dashboard"
   before_action :authenticate_user!
-  before_action :set_income, only: [:show, :edit, :update, :destroy]
+  before_action :set_income, only: [:edit, :update, :destroy]
   before_action :set_existing_income_types, only: [:new, :create, :edit, :update]
 
   def index
     @incomes = current_user.incomes
-  end
-
-  def show
   end
 
   def new
@@ -18,7 +15,7 @@ class IncomesController < ApplicationController
   def create
     @income = current_user.incomes.new(income_params)
     if @income.save
-      redirect_to @income
+      redirect_to incomes_path
     else
       render :new
     end
@@ -29,7 +26,7 @@ class IncomesController < ApplicationController
 
   def update
     if @income.update(income_params)
-      redirect_to @income
+      redirect_to incomes_path
     else
       render :edit
     end
