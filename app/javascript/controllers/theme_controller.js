@@ -7,6 +7,11 @@ export default class extends Controller {
   static targets = ["toggleOption"]
 
   connect() {
+    const lock = this.element.dataset.themeLock
+    if (lock) {
+      this.applyTheme(lock)
+      return
+    }
     const mode = localStorage.getItem(STORAGE_KEY_MODE) || DEFAULT_MODE
     this.applyTheme(mode)
 
