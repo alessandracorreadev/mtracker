@@ -72,7 +72,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 0.25rem;
-    color: var(--theme-text);
+    color: #05B355;
   }
 
   .sidebar-email {
@@ -93,19 +93,19 @@
     align-items: center;
     padding: 0.6rem 1rem;
     border-radius: 8px;
-    color: var(--theme-text);
+    color: white;
     text-decoration: none;
-    background: var(--theme-bg-sidebar-alt);
+    background: #05B355;
     transition: background 0.2s, color 0.2s;
 
     &:hover {
-      background: var(--theme-link-hover-bg);
-      color: var(--theme-text);
+      background: #049A4A;
+      color: white;
     }
 
     &.active {
-      background: var(--theme-link-active-bg);
-      color: var(--theme-text);
+      background: #026D34;
+      color: white;
       font-weight: 500;
     }
   }

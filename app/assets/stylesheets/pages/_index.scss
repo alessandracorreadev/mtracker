@@ -1,6 +1,53 @@
 // Import page-specific CSS files here.
 @import "home";
 
+// Dashboard period filter
+.period-filter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--theme-bg-card);
+  border: 1px solid var(--theme-border);
+  border-radius: 2rem;
+  padding: 0.35rem 0.75rem 0.35rem 0.6rem;
+  box-shadow: 0 1px 3px var(--theme-shadow);
+
+  .period-filter-icon {
+    color: var(--theme-text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+  }
+
+  .period-filter-selects {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .period-filter-divider {
+    color: var(--theme-text-muted);
+    font-size: 0.85rem;
+  }
+
+  .period-select {
+    border: none;
+    background: transparent;
+    color: var(--theme-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0 0.15rem;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+}
+
 // Dashboard page
 .dashboard-page {
   .dashboard-title {

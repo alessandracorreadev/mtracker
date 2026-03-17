@@ -51,6 +51,12 @@ body {
   }
 }
 
+// Period filter select options (dark mode fix)
+[data-theme="dark"] .period-select option {
+  background-color: var(--theme-bg-card);
+  color: var(--theme-text);
+}
+
 // Sidebar email (avoids Bootstrap .text-muted overriding in dark mode)
 .dashboard-sidebar .sidebar-email,
 .sidebar-email.text-muted {

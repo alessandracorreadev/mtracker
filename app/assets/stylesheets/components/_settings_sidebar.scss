@@ -71,7 +71,7 @@
     margin-bottom: 1.25rem;
     display: flex;
     align-items: center;
-    color: var(--theme-text);
+    color: #05B355;
   }
 
   .settings-nav {
@@ -85,20 +85,21 @@
     align-items: center;
     padding: 0.6rem 1rem;
     border-radius: 8px;
-    color: var(--theme-text);
+    color: white;
     text-decoration: none;
-    background: var(--theme-bg-card);
+    // background: var(--theme-bg-card);
+    background: #05B355;
     border: 1px solid var(--theme-border);
     transition: background 0.2s, color 0.2s;
 
     &:hover {
-      background: var(--theme-link-hover-bg);
-      color: var(--theme-text);
+      background:#049A4A;
+      color: white;
     }
 
     &.active {
-      background: var(--theme-link-active-bg);
-      color: var(--theme-text);
+      background: #026D34;
+      color: white;
       font-weight: 500;
       border-color: var(--theme-link-active-bg);
     }
