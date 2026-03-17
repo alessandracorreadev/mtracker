@@ -8,6 +8,8 @@
     <% end %>
   </datalist>
   <%= f.input :description, label: "Descrição", input_html: { rows: 2 } %>
-  <%= f.button :submit, @income.persisted? ? "Atualizar ganho" : "Cadastrar ganho", class: "btn-primary" %>
-  <%= link_to "Cancelar", @income.persisted? ? income_path(@income) : incomes_path, class: "btn btn-outline-secondary ms-2" %>
+  <div class="d-flex flex-wrap gap-2 mt-3">
+    <%= f.button :submit, @income.persisted? ? "Atualizar ganho" : "Cadastrar ganho", class: "btn-primary" %>
+    <%= link_to "Cancelar", @income.persisted? ? income_path(@income) : incomes_path, class: "btn btn-outline-secondary" %>
+  </div>
 <% end %>

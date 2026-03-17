@@ -5,7 +5,8 @@ class IncomesController < ApplicationController
   before_action :set_existing_income_types, only: [:new, :create, :edit, :update]
 
   def index
-    @incomes = current_user.incomes
+    @incomes = current_user.incomes.order(date: :desc)
+    @incomes_by_month = @incomes.group_by { |i| i.date.beginning_of_month }.sort_by { |month, _| month }.reverse
   end
 
   def new

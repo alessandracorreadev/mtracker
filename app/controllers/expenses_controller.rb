@@ -5,7 +5,8 @@ class ExpensesController < ApplicationController
   before_action :set_existing_expense_types, only: [:new, :create, :edit, :update]
 
   def index
-    @expenses = current_user.expenses
+    @expenses = current_user.expenses.order(date: :desc)
+    @expenses_by_month = @expenses.group_by { |e| e.date.beginning_of_month }.sort_by { |month, _| month }.reverse
   end
 
   def new

@@ -5,7 +5,8 @@ class InvestmentsController < ApplicationController
   before_action :set_existing_investment_types, only: [:new, :create, :edit, :update]
 
   def index
-    @investments = current_user.investments
+    @investments = current_user.investments.order(date: :desc)
+    @investments_by_month = @investments.group_by { |i| i.date.beginning_of_month }.sort_by { |month, _| month }.reverse
   end
 
   def new
