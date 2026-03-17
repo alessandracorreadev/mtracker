@@ -1,0 +1,14 @@
+<div class="settings-theme-page" data-controller="theme">
+  <header class="settings-theme-header mb-4">
+    <h1 class="settings-theme-title">Theme</h1>
+    <p class="settings-theme-subtitle text-muted">Default theme</p>
+  </header>
+
+  <section class="settings-theme-default card rounded-3 shadow-sm p-4">
+    <h3 class="h6 text-muted mb-3">Tema padrão</h3>
+    <div class="theme-toggle d-flex rounded-3 overflow-hidden border" style="width: fit-content;">
+      <button type="button" class="theme-toggle-option" data-theme-target="toggleOption" data-theme-mode="light" data-action="click->theme#setMode" aria-pressed="false">Claro</button>
+      <button type="button" class="theme-toggle-option" data-theme-target="toggleOption" data-theme-mode="dark" data-action="click->theme#setMode" aria-pressed="false">Escuro</button>
+    </div>
+  </section>
+</div>

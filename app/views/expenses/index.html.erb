@@ -1,0 +1,33 @@
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gastos</h1>
+    <%= link_to "Novo gasto", new_expense_path, class: "btn btn-primary" %>
+  </div>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Categoria</th>
+        <th>Valor (R$)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @expenses.each do |expense| %>
+        <tr>
+          <td><%= expense.date %></td>
+          <td><%= expense.description %></td>
+          <td><%= expense.expense_type %></td>
+          <td><%= expense.value %></td>
+          <td>
+            <%= link_to "Editar", edit_expense_path(expense), class: "btn btn-sm btn-outline-secondary" %>
+            <%= link_to "Excluir", expense_path(expense), class: "btn btn-sm btn-outline-danger",
+                data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

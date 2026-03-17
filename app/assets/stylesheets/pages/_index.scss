@@ -1,2 +1,69 @@
 // Import page-specific CSS files here.
 @import "home";
+
+// Dashboard page
+.dashboard-page {
+  .dashboard-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .dashboard-card {
+    .card-value {
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+  }
+
+  .dashboard-card-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+  }
+
+  .expenses-legend .legend-dot {
+    width: 12px;
+    height: 12px;
+    flex-shrink: 0;
+  }
+}
+
+// Settings - Theme page
+.settings-theme-page {
+  .settings-theme-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+
+  .settings-theme-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .theme-toggle {
+    .theme-toggle-option {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: var(--theme-bg-card);
+      color: var(--theme-text);
+      cursor: pointer;
+      font-size: 0.9rem;
+
+      &.active {
+        background: var(--theme-link-active-bg);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.settings-section-page .settings-section-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
