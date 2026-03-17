@@ -10,6 +10,6 @@
   <%= f.input :description, label: "Descrição", input_html: { rows: 2 } %>
   <div class="d-flex flex-wrap gap-2 mt-3">
     <%= f.button :submit, @investment.persisted? ? "Atualizar investimento" : "Cadastrar investimento", class: "btn-primary" %>
-    <%= link_to "Cancelar", @investment.persisted? ? investment_path(@investment) : investments_path, class: "btn btn-outline-secondary" %>
+    <%= link_to "Cancelar", investments_path, class: "btn btn-outline-secondary", data: { turbo_frame: "_top", turbo: false } %>
   </div>
 <% end %>
