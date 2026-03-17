@@ -44,6 +44,7 @@ class PagesController < ApplicationController
 
     first_year = [current_user.expenses.minimum(:date)&.year, current_user.incomes.minimum(:date)&.year, current_user.investments.minimum(:date)&.year].compact.min || Date.current.year
     @years = (first_year..Date.current.year).to_a.reverse
-    @months = [["Todos os meses", "all"]] + (1..12).map { |m| [I18n.l(Date.new(2000, m, 1), format: "%B"), m] }
+    month_names = %w[Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro]
+    @months = [["Todos os meses", "all"]] + (1..12).map { |m| [month_names[m - 1], m] }
   end
 end

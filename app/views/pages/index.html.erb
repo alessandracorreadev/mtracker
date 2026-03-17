@@ -4,11 +4,15 @@
       <h1 class="dashboard-title">Dashboard</h1>
       <p class="dashboard-subtitle text-muted mb-0">Visão geral</p>
     </div>
-    <%= form_with url: dashboard_path, method: :get, local: true, class: "d-flex flex-wrap align-items-center gap-2" do |f| %>
-      <label class="form-label mb-0 text-muted small">Mês</label>
-      <%= select_tag :month, options_for_select(@months, @selected_month), class: "form-select form-select-sm", style: "width: auto;", onchange: "this.form.submit()" %>
-      <label class="form-label mb-0 text-muted small">Ano</label>
-      <%= select_tag :year, options_for_select(@years, @selected_year), class: "form-select form-select-sm", style: "width: auto;", onchange: "this.form.submit()" %>
+    <%= form_with url: dashboard_path, method: :get, local: true, class: "period-filter" do |f| %>
+      <span class="period-filter-icon">
+        <i class="fa-regular fa-calendar"></i>
+      </span>
+      <div class="period-filter-selects">
+        <%= select_tag :month, options_for_select(@months, @selected_month), class: "period-select", onchange: "this.form.submit()" %>
+        <span class="period-filter-divider">/</span>
+        <%= select_tag :year, options_for_select(@years, @selected_year), class: "period-select", onchange: "this.form.submit()" %>
+      </div>
     <% end %>
   </header>
 
