@@ -1,0 +1,115 @@
+<div class="dashboard-page">
+  <header class="dashboard-header mb-4">
+    <h1 class="dashboard-title">Dashboard</h1>
+    <p class="dashboard-subtitle text-muted">Visão geral</p>
+  </header>
+
+  <section class="dashboard-cards row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1">Gastos</h6>
+            <p class="card-value mb-0"><%= number_to_currency(@total_expenses, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-wallet text-secondary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1">Salário/Ganhos</h6>
+            <p class="card-value mb-0"><%= number_to_currency(@total_incomes, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-dollar-sign text-secondary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1">Investimentos</h6>
+            <p class="card-value mb-0"><%= number_to_currency(@total_investments, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-chart-line text-secondary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1">Saldo</h6>
+            <p class="card-value mb-0"><%= number_to_currency(@balance, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
+            <i class="fa-solid fa-scale-balanced text-secondary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="dashboard-charts row g-4 mb-4">
+    <div class="col-lg-6">
+      <h2 class="h4 fw-bold mb-3">Despesas por categoria</h2>
+      <div class="card rounded-3 shadow-sm p-4 h-100" data-controller="expenses-chart" data-chart-data="<%= h(@expenses_by_category.to_json) %>">
+        <div class="row align-items-center">
+          <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
+            <canvas id="expenses-chart" width="280" height="280"></canvas>
+          </div>
+          <div class="col-md-6 col-lg-7">
+            <% if @expenses_by_category.present? %>
+              <ul class="expenses-legend list-unstyled mb-0">
+                <% chart_colors = ["#0d6efd", "#198754", "#6f42c1", "#fd7e14", "#dc3545", "#ffc107", "#20c997", "#0dcaf0", "#6c757d", "#fd7e14", "#198754", "#6f42c1"] %>
+                <% @expenses_by_category.each_with_index do |item, idx| %>
+                  <li class="d-flex align-items-center mb-2">
+                    <span class="legend-dot rounded-circle me-2" style="background-color: <%= chart_colors[idx % chart_colors.size] %>;"></span>
+                    <span><%= item[:name] %></span>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="text-muted mb-0">Nenhuma despesa por categoria.</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <h2 class="h4 fw-bold mb-3">Investimentos por categoria</h2>
+      <div class="card rounded-3 shadow-sm p-4 h-100" data-controller="investments-chart" data-chart-data="<%= h(@investments_by_category.to_json) %>">
+        <div class="row align-items-center">
+          <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
+            <canvas id="investments-chart" width="280" height="280"></canvas>
+          </div>
+          <div class="col-md-6 col-lg-7">
+            <% if @investments_by_category.present? %>
+              <ul class="expenses-legend list-unstyled mb-0">
+                <% inv_colors = ["#0d6efd", "#198754", "#6f42c1", "#fd7e14", "#dc3545", "#ffc107", "#20c997", "#0dcaf0", "#6c757d", "#e83e8c", "#198754", "#6f42c1"] %>
+                <% @investments_by_category.each_with_index do |item, idx| %>
+                  <li class="d-flex align-items-center mb-2">
+                    <span class="legend-dot rounded-circle me-2" style="background-color: <%= inv_colors[idx % inv_colors.size] %>;"></span>
+                    <span><%= item[:name] %></span>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <p class="text-muted mb-0">Nenhum investimento por categoria.</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+

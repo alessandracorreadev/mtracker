@@ -8,6 +8,13 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   get "dashboard", to: "pages#index"
+  get "settings", to: "settings#index", as: :settings
+  get "settings/theme", to: "settings#theme", as: :settings_theme
+  get "settings/password", to: "settings#password", as: :settings_password
+  patch "settings/password", to: "settings#update_password", as: :update_settings_password
+  get "settings/email", to: "settings#email", as: :settings_email
+  patch "settings/email", to: "settings#update_email", as: :update_settings_email
+  get "settings/support", to: "settings#support", as: :settings_support
   resources :expenses
   resources :incomes
   resources :investments

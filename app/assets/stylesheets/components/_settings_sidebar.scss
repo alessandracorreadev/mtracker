@@ -1,0 +1,57 @@
+.settings-layout {
+  .settings-sidebar-wrapper {
+    background: var(--theme-bg-sidebar-alt);
+    padding: 1.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .settings-sidebar-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    color: var(--theme-text);
+  }
+
+  .settings-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .settings-nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    color: var(--theme-text);
+    text-decoration: none;
+    background: var(--theme-bg-card);
+    border: 1px solid var(--theme-border);
+    transition: background 0.2s, color 0.2s;
+
+    &:hover {
+      background: var(--theme-link-hover-bg);
+      color: var(--theme-text);
+    }
+
+    &.active {
+      background: var(--theme-link-active-bg);
+      color: var(--theme-text);
+      font-weight: 500;
+      border-color: var(--theme-link-active-bg);
+    }
+
+    &.settings-nav-link-back {
+      margin-top: 1rem;
+    }
+  }
+
+  .settings-main {
+    background: var(--theme-bg-page);
+    min-height: 100vh;
+    padding: 1.5rem 2rem;
+  }
+}

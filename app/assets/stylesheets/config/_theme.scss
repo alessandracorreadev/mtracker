@@ -1,0 +1,57 @@
+// Theme variables: set on <html> via data-theme (from JS)
+// Default (light)
+:root,
+[data-theme="light"] {
+  --theme-bg-page: #f8f9fa;
+  --theme-bg-card: #ffffff;
+  --theme-bg-sidebar: #ffffff;
+  --theme-bg-sidebar-alt: #f4f4f4;
+  --theme-text: #212529;
+  --theme-text-muted: #6c757d;
+  --theme-border: #dee2e6;
+  --theme-link-active-bg: #dee2e6;
+  --theme-link-hover-bg: #e9ecef;
+  --theme-shadow: rgba(0, 0, 0, 0.06);
+}
+
+html,
+body {
+  background-color: var(--theme-bg-page);
+  color: var(--theme-text);
+}
+
+[data-theme="dark"] {
+  --theme-bg-page: #212529;
+  --theme-bg-card: #343a40;
+  --theme-bg-sidebar: #343a40;
+  --theme-bg-sidebar-alt: #2d3238;
+  --theme-text: #f8f9fa;
+  --theme-text-muted: #adb5bd;
+  --theme-border: #495057;
+  --theme-link-active-bg: #495057;
+  --theme-link-hover-bg: #495057;
+  --theme-shadow: rgba(0, 0, 0, 0.3);
+}
+
+// Apply theme to common components
+.card {
+  background-color: var(--theme-bg-card);
+  color: var(--theme-text);
+  border-color: var(--theme-border);
+}
+
+.dashboard-page,
+.settings-theme-page,
+.settings-section-page {
+  color: var(--theme-text);
+
+  .text-muted {
+    color: var(--theme-text-muted) !important;
+  }
+}
+
+// Sidebar email (avoids Bootstrap .text-muted overriding in dark mode)
+.dashboard-sidebar .sidebar-email,
+.sidebar-email.text-muted {
+  color: var(--theme-text-muted) !important;
+}
