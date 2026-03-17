@@ -3,6 +3,7 @@
   <head>
     <title>Settings - Money Tracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta id="theme-color-meta" name="theme-color" content="#ffffff">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,13 +11,21 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="settings-layout" data-controller="theme">
+  <body class="settings-layout" data-controller="theme sidebar">
+    <div class="settings-mobile-header d-md-none">
+      <button type="button" class="settings-mobile-menu-btn" aria-label="Abrir menu" data-action="click->sidebar#toggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <span class="settings-mobile-brand">Settings</span>
+      <span style="width: 44px;"></span>
+    </div>
+    <div class="settings-overlay d-md-none" data-sidebar-target="overlay" data-action="click->sidebar#close" aria-hidden="true"></div>
     <div class="container-fluid g-0 min-vh-100">
       <div class="row g-0 min-vh-100">
-        <aside class="settings-sidebar-wrapper col-md-3 col-lg-2">
+        <aside class="settings-sidebar-wrapper col-md-3 col-lg-2" data-sidebar-target="sidebar">
           <%= render "settings/sidebar" %>
         </aside>
-        <main class="settings-main col-md-9 col-lg-10">
+        <main class="settings-main col-12 col-md-9 col-lg-10">
           <%= yield %>
         </main>
       </div>

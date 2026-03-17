@@ -73,7 +73,9 @@
       <div class="card rounded-3 shadow-sm p-4 h-100" data-controller="expenses-chart" data-chart-data="<%= h(@expenses_by_category.to_json) %>">
         <div class="row align-items-center">
           <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
-            <canvas id="expenses-chart" width="280" height="280"></canvas>
+            <div class="chart-container">
+              <canvas id="expenses-chart"></canvas>
+            </div>
           </div>
           <div class="col-md-6 col-lg-7">
             <% if @expenses_by_category.present? %>
@@ -98,7 +100,9 @@
       <div class="card rounded-3 shadow-sm p-4 h-100" data-controller="investments-chart" data-chart-data="<%= h(@investments_by_category.to_json) %>">
         <div class="row align-items-center">
           <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
-            <canvas id="investments-chart" width="280" height="280"></canvas>
+            <div class="chart-container">
+              <canvas id="investments-chart"></canvas>
+            </div>
           </div>
           <div class="col-md-6 col-lg-7">
             <% if @investments_by_category.present? %>

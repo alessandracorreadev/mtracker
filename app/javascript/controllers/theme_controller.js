@@ -61,5 +61,7 @@ export default class extends Controller {
 
   applyTheme(mode) {
     document.documentElement.setAttribute("data-theme", mode)
+    const meta = document.getElementById("theme-color-meta")
+    if (meta) meta.setAttribute("content", mode === "dark" ? "#343a40" : "#ffffff")
   }
 }

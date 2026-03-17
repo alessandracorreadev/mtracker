@@ -3,6 +3,8 @@
   <head>
     <title>Money Tracker - Mtracker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="turbo-cache-control" content="no-cache">
+    <meta id="theme-color-meta" name="theme-color" content="#ffffff">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
@@ -10,10 +12,18 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="dashboard-layout" data-controller="theme">
+  <body class="dashboard-layout" data-controller="theme sidebar">
+    <div class="dashboard-mobile-header d-md-none">
+      <button type="button" class="dashboard-mobile-menu-btn" aria-label="Abrir menu" data-action="click->sidebar#toggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <span class="dashboard-mobile-brand">Money Tracker</span>
+      <span style="width: 44px;"></span>
+    </div>
+    <div class="dashboard-overlay d-md-none" data-sidebar-target="overlay" data-action="click->sidebar#close" aria-hidden="true"></div>
     <div class="container-fluid g-0 min-vh-100">
       <div class="row g-0 min-vh-100">
-        <aside class="dashboard-sidebar col-md-3 col-lg-2">
+        <aside class="dashboard-sidebar col-md-3 col-lg-2" data-sidebar-target="sidebar">
           <div class="sidebar-brand">
             <i class="fa-solid fa-envelope me-2"></i>
             <span>Money Tracker</span>
@@ -52,7 +62,7 @@
           </div>
         </aside>
 
-        <main class="dashboard-main col-md-9 col-lg-10">
+        <main class="dashboard-main col-12 col-md-9 col-lg-10">
           <%= yield %>
         </main>
       </div>
