@@ -18,53 +18,53 @@
 
   <section class="dashboard-cards row g-3 mb-4">
     <div class="col-sm-6 col-xl-3">
-      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <h6 class="card-subtitle text-muted mb-1">Gastos</h6>
             <p class="card-value mb-0"><%= number_to_currency(@total_expenses, unit: "R$ ", separator: ",", delimiter: ".") %></p>
           </div>
-          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-wallet text-secondary"></i>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #fbe9e9;">
+            <i class="fa-solid fa-wallet text-danger"></i>
           </div>
         </div>
       </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <h6 class="card-subtitle text-muted mb-1">Salário/Ganhos</h6>
             <p class="card-value mb-0"><%= number_to_currency(@total_incomes, unit: "R$ ", separator: ",", delimiter: ".") %></p>
           </div>
-          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-dollar-sign text-secondary"></i>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #e7f5ec;">
+            <i class="fa-solid fa-dollar-sign text-success"></i>
           </div>
         </div>
       </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <h6 class="card-subtitle text-muted mb-1">Investimentos</h6>
             <p class="card-value mb-0"><%= number_to_currency(@total_investments, unit: "R$ ", separator: ",", delimiter: ".") %></p>
           </div>
-          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-chart-line text-secondary"></i>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #e7f5ec;">
+            <i class="fa-solid fa-chart-line text-success"></i>
           </div>
         </div>
       </div>
     </div>
     <div class="col-sm-6 col-xl-3">
-      <div class="card dashboard-card h-100 rounded-3 shadow-sm">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm">
         <div class="card-body d-flex align-items-center justify-content-between">
           <div>
             <h6 class="card-subtitle text-muted mb-1">Saldo</h6>
             <p class="card-value mb-0"><%= number_to_currency(@balance, unit: "R$ ", separator: ",", delimiter: ".") %></p>
           </div>
-          <div class="dashboard-card-icon rounded-circle bg-light d-flex align-items-center justify-content-center">
-            <i class="fa-solid fa-scale-balanced text-secondary"></i>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #fbe9e9;">
+            <i class="fa-solid fa-scale-balanced text-danger"></i>
           </div>
         </div>
       </div>
@@ -74,7 +74,7 @@
   <section class="dashboard-charts row g-4 mb-4">
     <div class="col-lg-6">
       <h2 class="h4 fw-bold mb-3">Despesas por categoria</h2>
-      <div class="card rounded-3 shadow-sm p-4 h-100" data-controller="expenses-chart" data-chart-data="<%= h(@expenses_by_category.to_json) %>">
+      <div class="card rounded-5 shadow-sm p-4 h-100" data-controller="expenses-chart" data-chart-data="<%= h(@expenses_by_category.to_json) %>">
         <div class="row align-items-center">
           <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
             <canvas id="expenses-chart" width="280" height="280"></canvas>
@@ -99,7 +99,7 @@
     </div>
     <div class="col-lg-6">
       <h2 class="h4 fw-bold mb-3">Investimentos por categoria</h2>
-      <div class="card rounded-3 shadow-sm p-4 h-100" data-controller="investments-chart" data-chart-data="<%= h(@investments_by_category.to_json) %>">
+      <div class="card rounded-5 shadow-sm p-4 h-100" data-controller="investments-chart" data-chart-data="<%= h(@investments_by_category.to_json) %>">
         <div class="row align-items-center">
           <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
             <canvas id="investments-chart" width="280" height="280"></canvas>
@@ -124,4 +124,3 @@
     </div>
   </section>
 </div>
-
