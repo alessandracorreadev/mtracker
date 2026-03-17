@@ -1,7 +1,8 @@
-<nav class="navbar navbar-expand-sm navbar-light navbar-lewagon">
+<!-- <nav class="navbar navbar-expand-sm navbar-light navbar-lewagon" style="background-color: #0d1b2a;">
   <div class="container-fluid">
+
     <%= link_to "#", class: "navbar-brand" do %>
-      <%= image_tag "https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/logo.png" %>
+      <%= image_tag "mtracker_logo-removebg.png" %>
     <% end %>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +34,55 @@
           </li>
         <% end %>
       </ul>
+    </div>
+  </div>
+</nav> --> 
+
+<nav class="navbar navbar-expand-lg navbar-mtracker" style="background-color: #0d1b2a;">
+  <div class="container">
+
+    <%= link_to "#", class: "navbar-brand" do %>
+      <%= image_tag "mtracker_logo-removebg.png" %>
+    <% end %>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+      <ul class="navbar-nav gap-3">
+        <!-- <% if user_signed_in? %>
+          <li class="nav-item active">
+            <%= link_to "Dashboard", "#", class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Despesas", "#", class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Ganhos", "#", class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Investimentos", "#", class: "nav-link" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Configurações", "#", class: "nav-link" %>
+          </li>
+
+        <% else %> -->
+          <li class="nav-item"><a class="nav-link text-white" href="#servicos">Serviços</a></li>
+          <li class="nav-item"><a class="nav-link text-white" href="#missao">Sobre</a></li>
+          <%= link_to "Crie Sua Conta", new_user_registration_path, class: "nav-link text-white" %>
+          <%= link_to "Log In", new_user_session_path, class: "nav-link text-white" %>
+           <!-- <% end %> -->
+      </ul>
+
+      <!-- <ul class="navbar-nav gap-3">
+        <li class="nav-item"><a class="nav-link text-white" href="#servicos">Serviços</a></li>
+        <li class="nav-item"><a class="nav-link text-white" href="#missao">Sobre</a></li>
+        <%= link_to "Crie Sua Conta", new_user_registration_path, class: "nav-link text-white" %>
+        <%= link_to "Log In", new_user_session_path, class: "nav-link text-white" %>
+      </ul> -->
     </div>
   </div>
 </nav>

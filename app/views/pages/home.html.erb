@@ -1,28 +1,125 @@
-<div class="container py-5">
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-8 col-lg-6 text-center">
-      <h1 class="mb-4">Money Tracker</h1>
-      <p class="text-muted mb-4">Controle seus gastos, ganhos e investimentos.</p>
+<%# ========== HERO ========== %>
+<section style="background-color: #0d1b2a; min-height: 420px;" class="d-flex align-items-center">
+  <div class="container">
+    <div class="row align-items-end">
+      <div class="col-lg-6 my-5">
+        <h1 class="text-white fw-bold display-5">
+          GERENCIE SEUS <span class="text-success">GASTOS</span> E
+          VEJA O DINHEIRO SOBRAR NO FIM DO MÊS
+        </h1>
+        <p class="text-secondary">
+          Pare de perder o controle das suas despesas. Com o MTracker você
+          acompanha seus gastos e mantém sua vida financeira organizada.
+        </p>
+          <%= link_to "CRIE SUA CONTA", new_user_registration_path, class: "btn btn-success px-4 py-2 fw-bold" %>
+        </div>
 
-      <% if user_signed_in? %>
-        <%= link_to "Ir para o Dashboard", dashboard_path, class: "btn btn-primary btn-lg", data: { turbo: false } %>
-      <% else %>
-        <%= form_for User.new, as: :user, url: user_session_path, html: { method: :post, data: { turbo: false }, class: "mb-4" } do |f| %>
-          <% if flash[:alert] %>
-            <div class="alert alert-danger mb-3" role="alert"><%= flash[:alert] %></div>
-          <% end %>
-          <div class="mb-3 text-start">
-            <%= f.label :email, "Email", class: "form-label" %>
-            <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "seu@email.com" %>
-          </div>
-          <div class="mb-3 text-start">
-            <%= f.label :password, "Senha", class: "form-label" %>
-            <%= f.password_field :password, autocomplete: "current-password", class: "form-control", placeholder: "••••••••" %>
-          </div>
-          <%= f.submit "Entrar", class: "btn btn-primary btn-lg w-100 mb-3" %>
-        <% end %>
-        <%= link_to "Criar conta", new_user_registration_path, class: "btn btn-outline-primary btn-lg", data: { turbo: false } %>
-      <% end %>
+        <div class="col-lg-6 text-center d-none d-lg-block">
+          <%= image_tag "manmoney3.png", class: "img-fluid" %>
+        </div>
+
     </div>
   </div>
-</div>
+</section>
+
+<section id="servicos" class="py-5 bg-light">
+  <div class="container">
+
+    <h2 class="fw-bold mb-5">NOSSOS SERVIÇOS</h2>
+
+    <div class="row g-4">
+
+      <div class="col-md-4">
+        <div class="card h-100 text-center shadow-sm border-0 p-5 rounded-5 d-flex flex-column align-items-center">
+          <%= image_tag "iconeganhos3.png", style: "width: 80px; height: 80px;", class: "mb-3" %>
+          <h5 class="fw-bold">GANHOS</h5>
+          <p class="text-muted small mt-2">ANOTE SEUS GANHOS FIXOS, COMO SALÁRIO E VARIÁVEIS, COMO RENDA EXTRA.</p>
+          <a href="#" class="btn btn-dark mt-auto">LEARN MORE</a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 text-center shadow-sm border-0 p-5 rounded-5  d-flex flex-column align-items-center">
+          <%= image_tag "iconedespesas3.png", style: "width: 80px; height: 80px;", class: "mb-3" %>
+          <h5 class="fw-bold">GASTOS</h5>
+          <p class="text-muted small mt-2">CADASTRE SUAS DESPESAS, DESDE GASTOS FIXOS MENSAIS E GASTOS VARIADOS.</p>
+          <a href="#" class="btn btn-dark mt-auto">LEARN MORE</a>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card h-100 text-center shadow-sm border-0 p-5 rounded-5  d-flex flex-column align-items-center">
+          <%= image_tag "iconeinvestimentos3.png", style: "width: 80px; height: 80px;", class: "mb-3" %>
+          <h5 class="fw-bold">INVESTIMENTOS</h5>
+          <p class="text-muted small mt-2">TENHA UM CONTROLE DOS SEUS INVESTIMENTOS E VEJA SEU PATRIMÔNIO CRESCER.</p>
+          <a href="#" class="btn btn-dark mt-auto">LEARN MORE</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="missao" class="py-5" style="background: linear-gradient(135deg, #0d1b2a 60%, #00c853 100%);">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 text-white pe-5">
+        <h2 class="fw-bold mb-4">NOSSA MISSÃO</h2>
+        <p class="">
+          Nossa missão é ajudar pessoas a terem mais controle sobre sua vida financeira
+          de forma simples e acessível. Acreditamos que, ao organizar gastos, registrar
+          ganhos e acompanhar investimentos em um só lugar, qualquer pessoa pode tomar
+          decisões mais inteligentes e construir um futuro financeiro mais tranquilo.
+        </p>
+      </div>
+
+        <div class="col-lg-6 text-center d-none d-lg-block">
+          <%= image_tag "calculandofoto.png", class: "img-fluid" %>
+        </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# ========== VENHA FAZER PARTE ========== %>
+<section class="py-5 bg-light">
+  <div class="container">
+    <div class="row align-items-center">
+
+        <div class="col-lg-6 text-center d-none d-lg-block">
+          <%= image_tag "dinheiroquadrado.png", class: "img-fluid"  %>
+        </div>
+
+      <div class="col-lg-6">
+        <h2 class="fw-bold">VENHA FAZER PARTE</h2>
+        <p class="mt-3">
+          Comece hoje a transformar a forma como você cuida do seu dinheiro.
+          Junte-se a nós e tenha uma maneira simples e eficiente de registrar seus gastos,
+          acompanhar seus ganhos e organizar seus investimentos. Dê o primeiro passo para
+          ter mais controle financeiro e ver seu dinheiro trabalhar a seu favor.
+        </p>
+        <%= link_to "CRIE SUA CONTA", new_user_registration_path, class: "btn btn-success px-4 py-2 fw-bold mt-2" %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%# ========== FOOTER ========== %>
+<footer style="background-color: #0d1b2a;" class="py-4 text-white">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center">
+    <small class="text-secondary">© 2025 MTracker. All rights reserved.</small>
+    <div class="d-flex gap-3">
+      <a href="#" class="text-secondary">Privacy Policy</a>
+      <a href="#" class="text-secondary">Terms of Use</a>
+      <a href="#" class="text-secondary">Contact Us</a>
+    </div>
+    <div class="d-flex gap-3 mt-2 mt-md-0">
+      <a href="#" class="text-white"><i class="fa-brands fa-linkedin"></i></a>
+      <a href="#" class="text-white"><i class="fa-brands fa-youtube"></i></a>
+      <a href="#" class="text-white"><i class="fa-brands fa-facebook"></i></a>
+      <a href="#" class="text-white"><i class="fa-brands fa-twitter"></i></a>
+    </div>
+  </div>
+</footer>
