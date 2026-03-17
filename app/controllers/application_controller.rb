@@ -1,10 +1,6 @@
 class ApplicationController < ActionController::Base
-<<<<<<< custom-devise
-  before_action :authenticate_user!
-  before_action :configure_permitted_parameters, if: :devise_controller?
-=======
   before_action :authenticate_user!, unless: :devise_controller?
->>>>>>> master
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
