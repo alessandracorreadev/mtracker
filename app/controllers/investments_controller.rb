@@ -1,14 +1,12 @@
 class InvestmentsController < ApplicationController
   layout "dashboard"
   before_action :authenticate_user!
-  before_action :set_investment, only: [:show, :edit, :update, :destroy]
+  before_action :set_investment, only: [:edit, :update, :destroy]
   before_action :set_existing_investment_types, only: [:new, :create, :edit, :update]
 
   def index
-    @investments = current_user.investments
-  end
-
-  def show
+    @investments = current_user.investments.order(date: :desc)
+    @investments_by_month = @investments.group_by { |i| i.date.beginning_of_month }.sort_by { |month, _| month }.reverse
   end
 
   def new
@@ -18,7 +16,7 @@ class InvestmentsController < ApplicationController
   def create
     @investment = current_user.investments.new(investment_params)
     if @investment.save
-      redirect_to @investment
+      redirect_to investments_path
     else
       render :new
     end
@@ -29,7 +27,7 @@ class InvestmentsController < ApplicationController
 
   def update
     if @investment.update(investment_params)
-      redirect_to @investment
+      redirect_to investments_path
     else
       render :edit
     end

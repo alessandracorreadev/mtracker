@@ -1,14 +1,12 @@
 class ExpensesController < ApplicationController
   layout "dashboard"
   before_action :authenticate_user!
-  before_action :set_expense, only: [:show, :edit, :update, :destroy]
+  before_action :set_expense, only: [:edit, :update, :destroy]
   before_action :set_existing_expense_types, only: [:new, :create, :edit, :update]
 
   def index
-    @expenses = current_user.expenses
-  end
-
-  def show
+    @expenses = current_user.expenses.order(date: :desc)
+    @expenses_by_month = @expenses.group_by { |e| e.date.beginning_of_month }.sort_by { |month, _| month }.reverse
   end
 
   def new
@@ -18,7 +16,7 @@ class ExpensesController < ApplicationController
   def create
     @expense = current_user.expenses.new(expense_params)
     if @expense.save
-      redirect_to @expense
+      redirect_to expenses_path
     else
       render :new
     end
@@ -29,7 +27,7 @@ class ExpensesController < ApplicationController
 
   def update
     if @expense.update(expense_params)
-      redirect_to @expense
+      redirect_to expenses_path
     else
       render :edit
     end

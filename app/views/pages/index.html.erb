@@ -1,7 +1,19 @@
 <div class="dashboard-page">
-  <header class="dashboard-header mb-4">
-    <h1 class="dashboard-title" style="color: #05B355;">Dashboard</h1>
-    <p class="dashboard-subtitle text-muted">Visão geral</p>
+  <header class="dashboard-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="dashboard-title">Dashboard</h1>
+      <p class="dashboard-subtitle text-muted mb-0">Visão geral</p>
+    </div>
+    <%= form_with url: dashboard_path, method: :get, local: true, class: "period-filter" do |f| %>
+      <span class="period-filter-icon">
+        <i class="fa-regular fa-calendar"></i>
+      </span>
+      <div class="period-filter-selects">
+        <%= select_tag :month, options_for_select(@months, @selected_month), class: "period-select", onchange: "this.form.submit()" %>
+        <span class="period-filter-divider">/</span>
+        <%= select_tag :year, options_for_select(@years, @selected_year), class: "period-select", onchange: "this.form.submit()" %>
+      </div>
+    <% end %>
   </header>
 
   <section class="dashboard-cards row g-3 mb-4">
