@@ -15,58 +15,60 @@
 
   <body class="dashboard-layout" data-controller="theme sidebar">
     <div class="dashboard-mobile-header d-md-none">
-      <button type="button" class="dashboard-mobile-menu-btn" aria-label="Abrir menu" data-action="click->sidebar#toggle">
-        <i class="fa-solid fa-bars"></i>
+      <button type="button" class="dashboard-mobile-menu-btn" id="sidebar-toggle-btn" aria-expanded="false" aria-controls="dashboard-sidebar" aria-label="Abrir menu" data-sidebar-target="toggleButton" data-action="click->sidebar#toggle">
+        <i class="fa-solid fa-bars" aria-hidden="true"></i>
       </button>
       <span class="dashboard-mobile-brand">Money Tracker</span>
       <span style="width: 44px;"></span>
     </div>
     <div class="dashboard-overlay d-md-none" data-sidebar-target="overlay" data-action="click->sidebar#close" aria-hidden="true"></div>
-    <div class="container-fluid g-0 min-vh-100">
-      <div class="row g-0 min-vh-100">
-        <aside class="dashboard-sidebar col-md-3 col-lg-2" data-sidebar-target="sidebar">
-          <div class="sidebar-brand">
-            <i class="fa-solid fa-envelope me-2"></i>
-            <span>Money Tracker</span>
-          </div>
-          <p class="sidebar-email text-muted small"><%= current_user&.email %></p>
+    <div class="dashboard-layout-shell">
+      <aside id="dashboard-sidebar" class="dashboard-sidebar" data-sidebar-target="sidebar" aria-label="Navegação">
+        <div class="sidebar-brand">
+          <i class="fa-solid fa-chart-pie sidebar-brand-icon" aria-hidden="true"></i>
+          <span class="sidebar-brand-text">Money Tracker</span>
+        </div>
+        <p class="sidebar-email text-muted small"><%= current_user&.email %></p>
 
-          <nav class="sidebar-nav">
-            <%= link_to dashboard_path, class: "sidebar-link #{'active' if request.path == dashboard_path}" do %>
-              <i class="fa-solid fa-chart-line me-2"></i>
-              Dashboard
-            <% end %>
-            <%= link_to expenses_path, class: "sidebar-link #{'active' if request.path.start_with?(expenses_path)}" do %>
-              <i class="fa-solid fa-chart-line me-2"></i>
-              Gastos
-            <% end %>
-            <%= link_to incomes_path, class: "sidebar-link #{'active' if request.path.start_with?(incomes_path)}" do %>
-              <i class="fa-solid fa-dollar-sign me-2"></i>
-              Salário
-            <% end %>
-            <%= link_to investments_path, class: "sidebar-link #{'active' if request.path.start_with?(investments_path)}" do %>
-              <i class="fa-solid fa-chart-line me-2"></i>
-              Investimentos
-            <% end %>
-          </nav>
+        <nav class="sidebar-nav" aria-label="Menu principal">
+          <% dash_active = current_page?(dashboard_path) %>
+          <%= link_to dashboard_path, { class: "sidebar-link #{'active' if dash_active}", title: "Dashboard" }.merge(dash_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            <span class="sidebar-link-text">Dashboard</span>
+          <% end %>
+          <% exp_active = request.path.start_with?(expenses_path) %>
+          <%= link_to expenses_path, { class: "sidebar-link #{'active' if exp_active}", title: "Gastos" }.merge(exp_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+            <span class="sidebar-link-text">Gastos</span>
+          <% end %>
+          <% inc_active = request.path.start_with?(incomes_path) %>
+          <%= link_to incomes_path, { class: "sidebar-link #{'active' if inc_active}", title: "Salário" }.merge(inc_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
+            <span class="sidebar-link-text">Salário</span>
+          <% end %>
+          <% inv_active = request.path.start_with?(investments_path) %>
+          <%= link_to investments_path, { class: "sidebar-link #{'active' if inv_active}", title: "Investimentos" }.merge(inv_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            <span class="sidebar-link-text">Investimentos</span>
+          <% end %>
+        </nav>
 
-          <div class="sidebar-footer">
-            <%= link_to settings_path, class: "sidebar-icon", title: "Configurações" do %>
-              <i class="fa-solid fa-gear"></i>
-            <% end %>
-            <button type="button" class="sidebar-icon border-0 bg-transparent p-0" title="Alternar tema (claro/escuro)" data-action="click->theme#toggle" aria-label="Alternar tema">
-              <i class="fa-solid fa-toggle-off" data-theme-target="sidebarIcon"></i>
-            </button>
-            <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "sidebar-icon", title: "Sair" do %>
-              <i class="fa-solid fa-power-off"></i>
-            <% end %>
-          </div>
-        </aside>
+        <div class="sidebar-footer">
+          <%= link_to settings_path, class: "sidebar-icon", title: "Configurações", "aria-label" => "Configurações" do %>
+            <i class="fa-solid fa-gear" aria-hidden="true"></i>
+          <% end %>
+          <button type="button" class="sidebar-icon border-0 bg-transparent p-0" title="Alternar tema (claro/escuro)" data-action="click->theme#toggle" aria-label="Alternar tema">
+            <i class="fa-solid fa-toggle-off" data-theme-target="sidebarIcon" aria-hidden="true"></i>
+          </button>
+          <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "sidebar-icon", title: "Sair", "aria-label" => "Sair" do %>
+            <i class="fa-solid fa-power-off" aria-hidden="true"></i>
+          <% end %>
+        </div>
+      </aside>
 
-        <main class="dashboard-main col-12 col-md-9 col-lg-10">
-          <%= yield %>
-        </main>
-      </div>
+      <main class="dashboard-main">
+        <%= yield %>
+      </main>
     </div>
 
   </body>

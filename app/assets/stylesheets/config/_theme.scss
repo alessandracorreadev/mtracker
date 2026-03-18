@@ -12,6 +12,8 @@
   --theme-link-active-bg: #dee2e6;
   --theme-link-hover-bg: #e9ecef;
   --theme-shadow: rgba(0, 0, 0, 0.06);
+  --theme-accent: #05b355;
+  --theme-accent-dark: #026d34;
 }
 
 html,
@@ -32,6 +34,8 @@ body {
   --theme-link-active-bg: #495057;
   --theme-link-hover-bg: #495057;
   --theme-shadow: rgba(0, 0, 0, 0.3);
+  --theme-accent: #05b355;
+  --theme-accent-dark: #026d34;
 }
 
 // Apply theme to common components
@@ -39,6 +43,27 @@ body {
   background-color: var(--theme-bg-card);
   color: var(--theme-text);
   border-color: var(--theme-border);
+  border-top: 3px solid var(--theme-accent);
+  overflow: hidden;
+}
+
+.card.border-0 {
+  border: 0;
+  box-shadow: 0 0.125rem 0.25rem var(--theme-shadow);
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--theme-accent), var(--theme-accent-dark));
+    border-radius: inherit;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
 }
 
 .dashboard-page,
