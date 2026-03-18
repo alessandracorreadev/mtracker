@@ -13,8 +13,15 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="dashboard-layout" data-controller="theme">
-
+  <body class="dashboard-layout" data-controller="theme sidebar">
+    <div class="dashboard-mobile-header d-md-none">
+      <button type="button" class="dashboard-mobile-menu-btn" aria-label="Abrir menu" data-action="click->sidebar#toggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+      <span class="dashboard-mobile-brand">Money Tracker</span>
+      <span style="width: 44px;"></span>
+    </div>
+    <div class="dashboard-overlay d-md-none" data-sidebar-target="overlay" data-action="click->sidebar#close" aria-hidden="true"></div>
     <div class="container-fluid g-0 min-vh-100">
       <div class="row g-0 min-vh-100">
         <aside class="dashboard-sidebar col-md-3 col-lg-2" data-sidebar-target="sidebar">
