@@ -29,11 +29,16 @@
     font-size: 1.25rem;
     border-radius: 8px;
     cursor: pointer;
+    transition: background 0.2s ease;
 
-    &:hover,
-    &:focus {
+    &:hover {
       background: var(--theme-bg-sidebar-alt);
       color: var(--theme-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid #05b355;
+      outline-offset: 2px;
     }
   }
 
@@ -47,6 +52,8 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     z-index: 1040;
     opacity: 0;
     pointer-events: none;
@@ -56,29 +63,56 @@
       opacity: 1;
       pointer-events: auto;
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  .dashboard-layout-shell {
+    position: relative;
+    width: 100%;
   }
 
   .dashboard-sidebar {
     background: var(--theme-bg-sidebar);
-    padding: 1.5rem 1rem;
+    padding: 1.25rem 1rem;
     display: flex;
     flex-direction: column;
     box-shadow: 2px 0 8px var(--theme-shadow);
+    box-sizing: border-box;
   }
 
   .sidebar-brand {
-    font-weight: 700;
-    font-size: 1.1rem;
     display: flex;
     align-items: center;
-    margin-bottom: 0.25rem;
-    color: var(--theme-text-muted) !important;
+    gap: 0.5rem;
+    padding-bottom: 0.85rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--theme-border);
+    font-weight: 700;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+
+    .sidebar-brand-icon {
+      color: #05b355;
+      font-size: 1.35rem;
+      flex-shrink: 0;
+    }
+
+    .sidebar-brand-text {
+      color: var(--theme-text);
+      line-height: 1.2;
+    }
   }
 
   .sidebar-email {
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.85rem;
     word-break: break-all;
     color: var(--theme-text-muted) !important;
+    font-size: 0.8rem;
+    line-height: 1.35;
+    flex-shrink: 0;
   }
 
   .sidebar-nav {
@@ -86,44 +120,77 @@
     flex-direction: column;
     gap: 0.5rem;
     flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--theme-border);
+    margin-bottom: 0.5rem;
   }
 
   .sidebar-link {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
     padding: 0.6rem 1rem;
     border-radius: 8px;
-    color: white;
+    color: #fff !important;
     text-decoration: none;
-    background: #05B355;
-    transition: background 0.2s, color 0.2s;
+    background: #05b355;
+    font-weight: 500;
+    font-size: 0.925rem;
+    transition: background 0.2s ease, color 0.2s ease;
+    flex-shrink: 0;
+
+    i {
+      width: 1.25rem;
+      text-align: center;
+      flex-shrink: 0;
+    }
 
     &:hover {
-      background: #049A4A;
-      color: white;
+      background: #049a4a;
+      color: #fff !important;
+    }
+
+    &:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.85);
+      outline-offset: 2px;
     }
 
     &.active {
-      background: #026D34;
-      color: white;
-      font-weight: 500;
+      background: #026d34;
+      color: #fff !important;
+      font-weight: 600;
     }
   }
 
   .sidebar-footer {
     display: flex;
-    gap: 0.75rem;
-    padding-top: 1rem;
+    gap: 0.35rem;
+    padding-top: 0.75rem;
     margin-top: auto;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--theme-border);
   }
 
   .sidebar-icon {
     color: var(--theme-text-muted);
     font-size: 1.1rem;
     text-decoration: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: color 0.2s ease, background 0.2s ease;
 
     &:hover {
       color: var(--theme-text);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--theme-text-muted, currentColor);
+      outline-offset: 2px;
     }
   }
 
@@ -131,6 +198,54 @@
     background: var(--theme-bg-page);
     min-height: 100vh;
     padding: 1.5rem 2rem;
+    box-sizing: border-box;
+  }
+
+  /* Desktop/tablet: sidebar fixa colada no topo e no fundo (como drawer no mobile); só o main rola */
+  @media (min-width: 768px) {
+    body.dashboard-layout {
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    .dashboard-layout-shell {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .dashboard-sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 25%;
+      z-index: 1020;
+      overflow: hidden;
+    }
+
+    .dashboard-main {
+      margin-left: 25%;
+      width: 75%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      height: 100vh;
+      height: 100dvh;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .dashboard-sidebar {
+      width: 16.66666667%;
+    }
+
+    .dashboard-main {
+      margin-left: 16.66666667%;
+      width: 83.33333333%;
+    }
   }
 
   @media (max-width: 767.98px) {
@@ -148,20 +263,28 @@
       z-index: 1050;
       transform: translateX(-100%);
       transition: transform 0.25s ease;
-      overflow-y: auto;
+      overflow: hidden;
 
       &.open {
         transform: translateX(0);
       }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
     }
 
     .dashboard-main {
+      margin-left: 0 !important;
+      width: 100% !important;
+      height: auto !important;
+      min-height: 100vh;
+      min-height: 100dvh;
       padding: 1rem;
       padding-left: unquote("max(1rem, env(safe-area-inset-left))");
       padding-right: unquote("max(1rem, env(safe-area-inset-right))");
       padding-top: calc(72px + env(safe-area-inset-top, 0px));
       padding-bottom: env(safe-area-inset-bottom, 0);
-      min-height: 100vh;
     }
 
     .dashboard-sidebar {
