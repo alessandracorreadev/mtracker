@@ -17,37 +17,38 @@
           <h2 class="h5 mb-0 fw-bold"><%= l(month, format: :month_year) %></h2>
           <span class="badge bg-secondary fs-6"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></span>
         </div>
-        <div class="table-responsive">
-          <table class="table table-hover align-middle mb-0">
-            <thead class="table-light">
-              <tr>
-                <th>Data</th>
-                <th>Descrição</th>
-                <th>Categoria</th>
-                <th class="text-end">Valor</th>
-                <th class="text-end" style="width: 140px;">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              <% investments.each do |investment| %>
-                <tr>
-                  <td><%= investment.date.strftime("%d/%m/%Y") %></td>
-                  <td><%= investment.description.presence || "—" %></td>
-                  <td><%= investment.investment_type.presence || "—" %></td>
-                  <td class="text-end fw-semibold"><%= number_to_currency(investment.value, unit: "R$ ", separator: ",", delimiter: ".") %></td>
-                  <td class="text-end">
-                    <%= link_to edit_investment_path(investment), class: "btn btn-sm btn-outline-secondary", title: "Editar" do %>
-                      <i class="fa-solid fa-pen"></i>
-                    <% end %>
-                    <%= link_to investment_path(investment), class: "btn btn-sm btn-outline-danger", title: "Excluir",
-                        data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir este investimento?" } do %>
-                      <i class="fa-solid fa-trash"></i>
-                    <% end %>
-                  </td>
-                </tr>
-              <% end %>
-            </tbody>
-          </table>
+        <div class="list-cards-wrapper">
+          <% investments.each do |investment| %>
+            <div class="list-item-card">
+              <div class="list-item-card-body">
+                <div class="list-item-card-row">
+                  <span class="list-item-card-label">Data</span>
+                  <span><%= investment.date.strftime("%d/%m/%Y") %></span>
+                </div>
+                <div class="list-item-card-row">
+                  <span class="list-item-card-label">Descrição</span>
+                  <span><%= investment.description.presence || "—" %></span>
+                </div>
+                <div class="list-item-card-row">
+                  <span class="list-item-card-label">Categoria</span>
+                  <span><%= investment.investment_type.presence || "—" %></span>
+                </div>
+                <div class="list-item-card-row list-item-card-value">
+                  <span class="list-item-card-label">Valor</span>
+                  <span class="fw-semibold"><%= number_to_currency(investment.value, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+                </div>
+                <div class="list-item-card-actions">
+                  <%= link_to edit_investment_path(investment), class: "btn btn-outline-secondary list-item-card-btn", title: "Editar" do %>
+                    <i class="fa-solid fa-pen"></i>
+                  <% end %>
+                  <%= link_to investment_path(investment), class: "btn btn-outline-danger list-item-card-btn", title: "Excluir",
+                      data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir este investimento?" } do %>
+                    <i class="fa-solid fa-trash"></i>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% end %>
         </div>
       </div>
     <% end %>

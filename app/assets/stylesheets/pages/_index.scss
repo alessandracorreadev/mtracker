@@ -78,6 +78,165 @@
     height: 12px;
     flex-shrink: 0;
   }
+
+  .chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 280px;
+    height: 280px;
+    margin: 0 auto;
+  }
+
+  .dashboard-charts .col-lg-6 {
+    min-width: 0; // evita que o card da esquerda ultrapasse e sobreponha o título da direita
+  }
+
+  @media (max-width: 767.98px) {
+    .dashboard-header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+
+    .dashboard-title {
+      font-size: 1.35rem;
+    }
+
+    .dashboard-card .card-value {
+      font-size: 1.1rem;
+    }
+
+    .dashboard-card-icon {
+      width: 40px;
+      height: 40px;
+      font-size: 1rem;
+    }
+
+    .chart-container {
+      max-width: 100%;
+      height: 240px;
+    }
+
+    .dashboard-cards .col-sm-6 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+// List pages (expenses, incomes, investments) - cards on mobile and desktop
+.list-cards-wrapper {
+  padding: 0 0.5rem 0.5rem;
+
+  @media (min-width: 768px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.list-item-card {
+  border: 1px solid var(--theme-border);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+  background: var(--theme-bg-card);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 768px) {
+    margin-bottom: 0;
+  }
+}
+
+.list-item-card-body {
+  padding: 1rem;
+}
+
+.list-item-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  margin-bottom: 0.35rem;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
+
+  &.list-item-card-value {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--theme-border);
+    font-size: 1rem;
+  }
+}
+
+.list-item-card-label {
+  color: var(--theme-text-muted);
+  flex-shrink: 0;
+}
+
+.list-item-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--theme-border);
+}
+
+.list-item-card-btn {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+}
+
+@media (max-width: 767.98px) {
+  .table-responsive {
+    -webkit-overflow-scrolling: touch;
+    margin-left: -1rem;
+    margin-right: -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.dashboard-form-card {
+  max-width: 32rem;
+
+  @media (max-width: 767.98px) {
+    max-width: 100%;
+
+    .form-control,
+    .form-select,
+    input[type="date"],
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      min-height: 44px;
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    textarea.form-control {
+      min-height: 80px;
+    }
+
+    .btn {
+      min-height: 44px;
+      padding: 0.5rem 1rem;
+    }
+  }
 }
 
 // Settings - Theme page
@@ -113,4 +272,21 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
+}
+
+// Devise / auth pages - mobile
+@media (max-width: 767.98px) {
+  main#main-content .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .form-actions .btn {
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+  }
+
+  .form-inputs .form-control {
+    min-height: 44px;
+  }
 }

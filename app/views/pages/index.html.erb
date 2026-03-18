@@ -73,11 +73,13 @@
 
   <section class="dashboard-charts row g-4 mb-4">
     <div class="col-lg-6">
-      <h2 class="h4 fw-bold mb-3">Despesas por categoria</h2>
       <div class="card rounded-5 shadow-sm p-4 h-100" data-controller="expenses-chart" data-chart-data="<%= h(@expenses_by_category.to_json) %>">
+        <h2 class="h5 fw-bold mb-3">Despesas por categoria</h2>
         <div class="row align-items-center">
           <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
-            <canvas id="expenses-chart" width="280" height="280"></canvas>
+            <div class="chart-container">
+              <canvas id="expenses-chart"></canvas>
+            </div>
           </div>
           <div class="col-md-6 col-lg-7">
             <% if @expenses_by_category.present? %>
@@ -98,11 +100,13 @@
       </div>
     </div>
     <div class="col-lg-6">
-      <h2 class="h4 fw-bold mb-3">Investimentos por categoria</h2>
       <div class="card rounded-5 shadow-sm p-4 h-100" data-controller="investments-chart" data-chart-data="<%= h(@investments_by_category.to_json) %>">
+        <h2 class="h5 fw-bold mb-3">Investimentos por categoria</h2>
         <div class="row align-items-center">
           <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
-            <canvas id="investments-chart" width="280" height="280"></canvas>
+            <div class="chart-container">
+              <canvas id="investments-chart"></canvas>
+            </div>
           </div>
           <div class="col-md-6 col-lg-7">
             <% if @investments_by_category.present? %>
