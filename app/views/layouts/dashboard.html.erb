@@ -70,6 +70,10 @@
         <%= yield %>
       </main>
     </div>
+    
+    <% if user_signed_in? %>
+      <%= render "shared/chat_widget" %>
+    <% end %>
 
   </body>
 </html>
