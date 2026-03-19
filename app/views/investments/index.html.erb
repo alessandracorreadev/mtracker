@@ -33,6 +33,12 @@
                   <span class="list-item-card-label">Categoria</span>
                   <span><%= investment.investment_type.presence || "—" %></span>
                 </div>
+                <% if investment.interest_rate.present? %>
+                <div class="list-item-card-row">
+                  <span class="list-item-card-label">Taxa de Juros</span>
+                  <span><%= number_to_percentage(investment.interest_rate, precision: 2, separator: ",") %> a.a.</span>
+                </div>
+                <% end %>
                 <div class="list-item-card-row list-item-card-value">
                   <span class="list-item-card-label">Valor</span>
                   <span class="fw-semibold"><%= number_to_currency(investment.value, unit: "R$ ", separator: ",", delimiter: ".") %></span>
