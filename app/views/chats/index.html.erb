@@ -1,0 +1,40 @@
+<%= turbo_frame_tag "chat_widget_frame" do %>
+  <div class="p-3" style="font-family: 'Inter', sans-serif;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="mb-0 fw-bold fs-6"><i class="fa-solid fa-comments text-primary"></i> Chats</h5>
+      <%= button_to "New Chat", chats_path, method: :post, class: "btn btn-sm btn-primary rounded-pill px-3 shadow-sm" %>
+    </div>
+
+    <% if @chats.any? %>
+      <div class="list-group list-group-flush" style="gap: 5px;">
+        <% @chats.order(created_at: :desc).each do |chat| %>
+          <%= link_to chat_path(chat), class: "list-group-item list-group-item-action p-2 border rounded shadow-sm mb-2" do %>
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <strong class="mb-1 d-block text-dark" style="font-size: 0.9rem;">Chat #<%= chat.id %></strong>
+                <small class="text-muted text-truncate d-block" style="max-width: 180px; font-size: 0.8rem;">
+                  <%= chat.messages.any? ? chat.messages.last.content : "Empty chat" %>
+                </small>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill"><%= chat.messages.count %> msg</span>
+                <div class="mt-1">
+                  <%= link_to "Delete", chat_path(chat), data: { turbo_method: :delete, turbo_confirm: "Delete this chat?" }, class: "text-danger text-decoration-none", style: "font-size: 0.75rem;" %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="text-center text-muted mt-5 d-flex flex-column align-items-center">
+        <div class="bg-light rounded-circle p-3 mb-3 d-inline-block">
+          <i class="fa-solid fa-robot fa-2x text-primary"></i>
+        </div>
+        <p class="small fw-medium">No active chats.</p>
+        <p class="text-muted" style="font-size: 0.8rem;">Start a new conversation to get financial insights.</p>
+        <%= button_to "Start Chat", chats_path, method: :post, class: "btn btn-sm btn-primary rounded-pill px-4 mt-2" %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

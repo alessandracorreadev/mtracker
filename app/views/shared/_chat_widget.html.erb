@@ -1,0 +1,76 @@
+<style>
+/* Premium Chat Widget Animations & Custom Styles */
+.chat-widget-btn {
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+.chat-widget-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+.chat-widget-container {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--theme-border);
+  transform-origin: bottom right;
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+}
+.chat-widget-container.collapse:not(.show) {
+  display: block;
+  opacity: 0;
+  transform: scale(0.9) translateY(20px);
+  pointer-events: none;
+}
+.chat-widget-container.collapse.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+[data-theme="dark"] .chat-widget-container {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255,255,255,0.05);
+}
+</style>
+
+<div id="ai-chat-widget" style="position: fixed; bottom: 25px; right: 25px; z-index: 1050; display: flex; flex-direction: column; align-items: flex-end;">
+  <div class="collapse mb-3 chat-widget-container" id="chatCollapse" style="width: 380px; border-radius: 20px; overflow: hidden; background-color: var(--theme-bg-page);">
+    
+    <div style="height: 550px; background-color: var(--theme-bg-page);">
+      <turbo-frame id="chat_widget_frame" src="<%= chats_path %>">
+        <!-- Loading State before turbo replaces the frame -->
+        <div class="d-flex flex-column justify-content-center align-items-center h-100" style="color: var(--theme-text-muted);">
+          <div class="spinner-border mb-3" style="width: 2rem; height: 2rem; color: var(--theme-accent);" role="status"></div>
+          <p class="fw-medium">Conectando à IA...</p>
+        </div>
+      </turbo-frame>
+    </div>
+  </div>
+
+  <button class="btn chat-widget-btn d-flex align-items-center justify-content-center" type="button" data-bs-toggle="collapse" data-bs-target="#chatCollapse" aria-expanded="false" aria-controls="chatCollapse" style="width: 65px; height: 65px; background-color: var(--theme-accent); border: none; outline: none; z-index: 1051; padding: 0; border-radius: 50%;">
+    <i class="fa-solid fa-comments fa-2x text-white" id="chat-fab-icon" style="transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></i>
+  </button>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const chatCollapse = document.getElementById('chatCollapse');
+    const fabIcon = document.getElementById('chat-fab-icon');
+    
+    if (chatCollapse && fabIcon) {
+      chatCollapse.addEventListener('show.bs.collapse', () => {
+        fabIcon.style.transform = "rotate(90deg) scale(0)";
+        setTimeout(() => {
+          fabIcon.classList.remove('fa-comments');
+          fabIcon.classList.add('fa-chevron-down');
+          fabIcon.style.transform = "rotate(0) scale(1)";
+        }, 150);
+      });
+      chatCollapse.addEventListener('hide.bs.collapse', () => {
+        fabIcon.style.transform = "rotate(-90deg) scale(0)";
+        setTimeout(() => {
+          fabIcon.classList.remove('fa-chevron-down');
+          fabIcon.classList.add('fa-comments');
+          fabIcon.style.transform = "rotate(0) scale(1)";
+        }, 150);
+      });
+    }
+  });
+</script>

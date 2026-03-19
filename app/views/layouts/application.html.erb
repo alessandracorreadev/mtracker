@@ -20,6 +20,10 @@
     <main id="main-content">
         <%= yield %>
     </main>
+    
+    <% if user_signed_in? && !current_page?(root_path) %>
+      <%= render "shared/chat_widget" %>
+    <% end %>
   </body>
 
 </html>

@@ -3,20 +3,22 @@ class ChatsController < ApplicationController
   before_action :set_chat, only: [:show, :destroy]
 
   def index
-    @chats = current_user.chats
+    # Singleton chat per user
+    @chat = current_user.chats.first_or_create!
+    redirect_to @chat
   end
 
   def show
   end
 
   def create
-    @chat = current_user.chats.create!
+    @chat = current_user.chats.first_or_create!
     redirect_to @chat
   end
 
   def destroy
     @chat.destroy
-    redirect_to chats_path
+    redirect_to dashboard_path, notice: "Chat history cleared."
   end
 
   private
