@@ -1,0 +1,148 @@
+<div class="dashboard-page dashboard-page--investments">
+  <!-- Dashboard-identical Header -->
+  <header class="dashboard-header d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="dashboard text-success fw-bolder">Meus Rendimentos</h1>
+      <p class="dashboard-subtitle text-muted mb-0">Análise de performance por categoria</p>
+    </div>
+    <%= link_to investments_path, class: "btn btn-primary" do %>
+      <i class="fa-solid fa-list me-1"></i> Ver aportes detalhados
+    <% end %>
+  </header>
+
+  <!-- 4-Card Summary Row (Identical to Dashboard) -->
+  <section class="dashboard-cards row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm border-0">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1 small text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">Total Investido</h6>
+            <p class="card-value mb-0 fw-bold fs-4"><%= number_to_currency(@total_invested, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: rgba(108, 117, 125, 0.1); width: 48px; height: 48px;">
+            <i class="fa-solid fa-vault text-muted"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm border-0">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1 small text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">Est. Mensal</h6>
+            <p class="card-value mb-0 fw-bold fs-4 text-primary"><%= number_to_currency(@monthly_estimated_yield, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: rgba(13, 110, 253, 0.1); width: 48px; height: 48px;">
+            <i class="fa-solid fa-calendar-check text-primary"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm border-0">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1 small text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">Lucro Acumulado</h6>
+            <p class="card-value mb-0 fw-bold fs-4 text-success"><%= number_to_currency(@total_yield, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: rgba(5, 179, 85, 0.12); width: 48px; height: 48px;">
+            <i class="fa-solid fa-arrow-trend-up text-success"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="card dashboard-card h-100 rounded-5 shadow-sm border-0">
+        <div class="card-body d-flex align-items-center justify-content-between p-4">
+          <div>
+            <h6 class="card-subtitle text-muted mb-1 small text-uppercase" style="font-size: 0.65rem; letter-spacing: 0.5px;">Patrimônio Total</h6>
+            <p class="card-value mb-0 fw-bold fs-4 text-info"><%= number_to_currency(@total_current_value, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+          </div>
+          <div class="dashboard-card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: rgba(13, 202, 240, 0.1); width: 48px; height: 48px;">
+            <i class="fa-solid fa-wallet text-info"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section Container (Identical to Dashboard Chart containers) -->
+  <section class="mb-4">
+    <div class="card rounded-5 shadow-sm p-4 overflow-hidden border-0 bg-white">
+      <h2 class="h5 fw-bold mb-4">Performance por Categoria</h2>
+      
+      <div class="category-groups">
+        <% @investments_by_type.each do |type, investments| %>
+          <% 
+             category_invested = investments.sum(&:value)
+             category_current = investments.sum(&:current_value)
+             category_yield = category_current - category_invested
+             id = type.parameterize
+          %>
+          <div class="mb-4 last-child-mb-0">
+            <!-- Header styled like a sleek separator -->
+            <div class="d-flex justify-content-between align-items-center py-2 px-3 mb-3 bg-light rounded-3" 
+                 style="cursor: pointer; user-select: none;"
+                 data-bs-toggle="collapse" data-bs-target="#collapse-<%= id %>">
+              <div>
+                <span class="fw-bold text-dark text-uppercase small letter-spacing-1"><%= type %></span>
+                <span class="ms-2 badge bg-white text-muted border-0 small"><%= investments.count %> aportes</span>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <span class="fw-bold text-dark"><%= number_to_currency(category_current, unit: "R$ ") %></span>
+                <i class="fa-solid fa-chevron-down text-muted small"></i>
+              </div>
+            </div>
+
+            <!-- List of items (Matching list-item-card style but cleaner) -->
+            <div id="collapse-<%= id %>" class="collapse">
+              <div class="row g-3 px-2 mb-4">
+                <% investments.each do |inv| %>
+                  <div class="col-12 col-md-6 col-xl-4">
+                    <div class="card rounded-4 border p-3 bg-white h-100 shadow-none hover-shadow-sm transition-all">
+                      <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-muted text-uppercase"><%= l(inv.date, format: "%B %Y") %></span>
+                        <span class="badge bg-soft-success text-success"><%= number_to_percentage(inv.interest_rate, precision: 1) %></span>
+                      </div>
+                      <div class="mb-2">
+                        <div class="small text-muted">Aporte: <%= number_to_currency(inv.value, unit: "R$ ") %></div>
+                        <div class="fw-bold fs-5 text-dark"><%= number_to_currency(inv.current_value, unit: "R$ ") %></div>
+                      </div>
+                      <div class="pt-2 border-top mt-auto">
+                        <span class="small text-success fw-bold">+ <%= number_to_currency(inv.accumulated_yield, unit: "R$ ") %> de rendimento</span>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <% if @investments_by_type.none? %>
+        <div class="text-center py-5">
+          <p class="text-muted mb-0">Nenhum investimento para analisar rendimentos.</p>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="p-3 bg-light rounded-4 d-flex align-items-center gap-3 border-0 small text-muted shadow-none">
+    <i class="fa-solid fa-circle-info text-success"></i>
+    <span>Estilo padronizado com o Dashboard principal. Os rendimentos utilizam capitalização composta mensal.</span>
+  </div>
+</div>
+
+<style>
+  .letter-spacing-1 { letter-spacing: 0.5px; }
+  .last-child-mb-0:last-child { margin-bottom: 0 !important; }
+  .bg-soft-success { background-color: rgba(5, 179, 85, 0.1); }
+  .transition-all { transition: all 0.2s ease; }
+  .hover-shadow-sm:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateY(-2px); }
+  
+  [data-theme="dark"] .bg-white { background-color: #212529 !important; }
+  [data-theme="dark"] .text-dark { color: #f8f9fa !important; }
+  [data-theme="dark"] .bg-light { background-color: #1a1d20 !important; }
+  [data-theme="dark"] .card.border { border-color: #31373c !important; }
+</style>

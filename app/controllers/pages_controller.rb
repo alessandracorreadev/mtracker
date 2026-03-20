@@ -27,7 +27,8 @@ class PagesController < ApplicationController
 
     @total_expenses = @expenses.sum(:value) || 0
     @total_incomes = @incomes.sum(:value) || 0
-    @total_investments = @investments.sum(:value) || 0
+    @total_investments = @investments.map(&:current_value).sum || 0
+    @total_yield = @total_investments - (@investments.sum(:value) || 0)
     @balance = @total_incomes - @total_expenses
 
     @expenses_by_category = @expenses
