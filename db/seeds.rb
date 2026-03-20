@@ -88,7 +88,8 @@ while current_month <= end_date
     date: current_month.change(day: 12),
     value: 500.00,
     investment_type: "Renda Fixa",
-    description: "Aporte Mensal Tesouro"
+    description: "Aporte Mensal Tesouro",
+    interest_rate: 0.12 # 12% ao ano
   )
 
   current_month = current_month.next_month
