@@ -9,6 +9,20 @@ class InvestmentsController < ApplicationController
     @investments_by_month = @investments.group_by { |i| i.date.beginning_of_month }.sort_by { |month, _| month }.reverse
   end
 
+  def returns
+    @investments = current_user.investments.order(date: :desc)
+    @investments_by_type = @investments.group_by(&:investment_type)
+    
+    @total_invested = @investments.sum(:value)
+    @total_current_value = @investments.map(&:current_value).sum
+    @total_yield = @total_current_value - @total_invested
+    
+    # Estimativa de rendimento mensal (próximo mês)
+    @monthly_estimated_yield = @investments.sum do |inv|
+      inv.interest_rate.present? ? (inv.current_value * (inv.interest_rate / 100.0 / 12.0)) : 0
+    end
+  end
+
   def new
     @investment = current_user.investments.new
   end

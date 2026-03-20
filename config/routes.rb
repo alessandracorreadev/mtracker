@@ -17,7 +17,9 @@ Rails.application.routes.draw do
   get "settings/support", to: "settings#support", as: :settings_support
   resources :expenses
   resources :incomes
-  resources :investments
+  resources :investments do
+    get :returns, on: :collection
+  end
   resources :chats, only: [:index, :show, :create, :destroy] do
     resources :messages, only: [:create]
   end

@@ -46,10 +46,15 @@
             <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
             <span class="sidebar-link-text">Salário</span>
           <% end %>
-          <% inv_active = request.path.start_with?(investments_path) %>
+          <% inv_active = request.path.start_with?(investments_path) && !request.path.include?("returns") %>
           <%= link_to investments_path, { class: "sidebar-link #{'active' if inv_active}", title: "Investimentos" }.merge(inv_active ? { "aria-current" => "page" } : {}) do %>
             <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
             <span class="sidebar-link-text">Investimentos</span>
+          <% end %>
+          <% ret_active = request.path.include?("returns") %>
+          <%= link_to returns_investments_path, { class: "sidebar-link #{'active' if ret_active}", title: "Rendimentos" }.merge(ret_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+            <span class="sidebar-link-text">Meus Rendimentos</span>
           <% end %>
         </nav>
 

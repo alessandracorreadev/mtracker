@@ -84,12 +84,20 @@ while current_month <= end_date
   end
 
   # --- INVESTIMENTOS ---
+  investment_types = [
+    { type: "CDB", rate: rand(11.5..13.5).round(2) },
+    { type: "Tesouro SELIC", rate: 12.75 },
+    { type: "FII", rate: rand(8.0..11.0).round(2) },
+    { type: "Ações", rate: rand(12.0..18.0).round(2) }
+  ]
+  choice = investment_types.sample
+
   user.investments.create!(
     date: current_month.change(day: 12),
-    value: 500.00,
-    investment_type: "Renda Fixa",
-    description: "Aporte Mensal Tesouro",
-    interest_rate: 0.12 # 12% ao ano
+    value: [500, 1000, 1500].sample,
+    investment_type: choice[:type],
+    description: "Aporte Mensal #{choice[:type]}",
+    interest_rate: choice[:rate]
   )
 
   current_month = current_month.next_month
