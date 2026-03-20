@@ -64,6 +64,11 @@ class MessagesController < ApplicationController
     # Detect and save transaction if present
     clean_content = parse_and_save_transaction(full_response, user)
     
+    # If content became empty because only a transaction was sent, add a brief confirmation
+    if clean_content.blank? && @transaction_saved
+      clean_content = "Transação registrada com sucesso!"
+    end
+
     # Update final assistant message in DB
     assistant_msg.update!(content: clean_content)
     
@@ -118,6 +123,8 @@ class MessagesController < ApplicationController
       --- TRANSACTION DETECTION ---
       If the user describes a financial transaction, append a JSON block at the very end:
       [TRANSACTION:{"type":"expense","description":"Mercado","value":50.0,"date":"#{Date.today}","category":"Alimentação"}]
+      [TRANSACTION:{"type":"investment","description":"Tesouro SELIC","value":1000.0,"date":"#{Date.today}","category":"Renda Fixa","interest_rate":0.12}]
+      (NOTE: for investments, always include the interest_rate if mentioned, e.g. 0.12 for 12% per year)
     INSTRUCTIONS
   end
 
@@ -131,8 +138,9 @@ class MessagesController < ApplicationController
       case data['type']
       when 'expense' then user.expenses.create!(description: data['description'], value: data['value'].to_f, date: Date.parse(data['date']), expense_type: data['category'])
       when 'income'  then user.incomes.create!(description: data['description'], value: data['value'].to_f, date: Date.parse(data['date']), income_type: data['income_type'] || data['category'])
-      when 'investment' then user.investments.create!(description: data['description'], value: data['value'].to_f, date: Date.parse(data['date']), investment_type: data['investment_type'] || data['category'])
+      when 'investment' then user.investments.create!(description: data['description'], value: data['value'].to_f, date: Date.parse(data['date']), investment_type: data['investment_type'] || data['category'], interest_rate: data['interest_rate'])
       end
+      @transaction_saved = true
     rescue => e
       Rails.logger.error "Transaction Error: #{e.message}"
     end
