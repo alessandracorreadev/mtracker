@@ -46,7 +46,7 @@ while current_month <= end_date
   )
 
   # Alimentação (Vários gastos no mês)
-  4.each_with_index do |_, i|
+  4.times.each_with_index do |_, i|
     user.expenses.create!(
       date: current_month.change(day: 5 + (i * 7)),
       value: rand(150.0..350.0).round(2),
