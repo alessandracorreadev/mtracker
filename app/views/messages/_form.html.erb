@@ -1,0 +1,8 @@
+<%= simple_form_for [@chat, message], html: { id: "chat_form", data: { turbo: true }, class: "m-0" } do |f| %>
+  <div class="d-flex align-items-center gap-2">
+    <%= f.input :content, as: :string, label: false, placeholder: "Como posso ajudar?", input_html: { id: "chat_input", class: "form-control chat-input-custom", autocomplete: "off" }, wrapper_html: { class: "flex-grow-1 mb-0" } %>
+    <button type="submit" class="btn-send-custom shadow-sm" id="chat_submit_btn" title="Enviar Mensagem">
+      <i class="fa-solid fa-paper-plane" style="margin-left: -2px;"></i>
+    </button>
+  </div>
+<% end %>

@@ -1,0 +1,19 @@
+<% if message.role == "user" %>
+  <div class="d-flex w-100 justify-content-end mb-2" id="<%= dom_id(message) %>">
+    <div class="chat-bubble user">
+      <%= simple_format(message.content, class: "mb-0") %>
+    </div>
+  </div>
+<% elsif message.role == "assistant" %>
+  <div class="d-flex w-100 justify-content-start mb-2" id="<%= dom_id(message) %>">
+    <div class="chat-bubble assistant">
+      <% if message.content.present? %>
+        <%= simple_format(message.content, class: "mb-0") %>
+      <% else %>
+        <div class="typing-indicator">
+          <span></span><span></span><span></span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
