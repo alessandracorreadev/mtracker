@@ -1,63 +1,102 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-
-puts "Seeding..."
-
+# Limpeza inicial para o usuário de teste
+puts "Limpando dados antigos do usuário teste..."
 user = User.find_or_initialize_by(email: "teste@mtracker.com")
 if user.new_record?
-  user.assign_attributes(
-    password: "123456",
-    password_confirmation: "123456",
-    name: "Usuário Teste",
-    birth_date: Date.new(1990, 5, 15)
-  )
+  user.assign_attributes(password: "123456", password_confirmation: "123456", name: "Usuário Teste", birth_date: Date.new(1990, 5, 15))
   user.save!
-  puts "  Criado usuário: #{user.email} (senha: 123456)"
-else
-  puts "  Usuário já existe: #{user.email}"
 end
 
-if user.expenses.exists?
-  puts "  Dados já existem para este usuário. Nada mais a criar."
-else
-  base = Date.current
+user.expenses.destroy_all
+user.incomes.destroy_all
+user.investments.destroy_all
 
-  expense_categories = ["Alimentação", "Transporte", "Moradia", "Lazer", "Saúde", "Compras"]
-  [-2, -1, 0].each do |m|
-    d = base + m.months
-    expense_categories.sample(4).each_with_index do |cat, i|
-      user.expenses.create!(
-        date: d - i.days,
-        value: [29.90, 45.00, 120.00, 89.50, 35.00, 200.00].sample,
-        expense_type: cat,
-        description: "Gasto em #{cat.downcase}"
-      )
-    end
-  end
+puts "Gerando dados de Março 2025 até Março 2026..."
 
-  income_categories = ["Salário", "Freelance", "Investimentos", "Extra"]
-  [-2, -1, 0].each do |m|
+start_date = Date.new(2025, 3, 1)
+end_date = Date.new(2026, 3, 31)
+current_month = start_date
+
+while current_month <= end_date
+  # --- RENDAS (Incomes) ---
+  # Salário mensal fixo
+  user.incomes.create!(
+    date: current_month.change(day: 5),
+    value: 5000.00,
+    income_type: "Salário",
+    description: "Salário Mensal - #{current_month.strftime('%B %Y')}"
+  )
+
+  # Freelance ocasional (em alguns meses)
+  if [true, false].sample
     user.incomes.create!(
-      date: base + m.months + 5.days,
-      value: [3500.00, 1200.00].sample,
-      income_type: income_categories.sample,
-      description: m.zero? ? "Renda do mês" : "Renda mês anterior"
+      date: current_month.change(day: 20),
+      value: [400, 600, 850].sample,
+      income_type: "Freelance",
+      description: "Projeto Extra"
     )
   end
 
-  investment_categories = ["Renda fixa", "Ações", "Tesouro Direto", "FII"]
-  [-1, 0].each do |m|
-    user.investments.create!(
-      date: base + m.months + 10.days,
-      value: [500.00, 1000.00, 300.00].sample,
-      investment_type: investment_categories.sample,
-      description: "Aplicação"
+  # --- GASTOS (Expenses) ---
+  # Moradia (Fixo)
+  user.expenses.create!(
+    date: current_month.change(day: 10),
+    value: 1500.00,
+    expense_type: "Moradia",
+    description: "Aluguel + Condomínio"
+  )
+
+  # Alimentação (Vários gastos no mês)
+  4.each_with_index do |_, i|
+    user.expenses.create!(
+      date: current_month.change(day: 5 + (i * 7)),
+      value: rand(150.0..350.0).round(2),
+      expense_type: "Alimentação",
+      description: "Supermercado Semana #{i+1}"
     )
   end
 
-  puts "  Criados: #{user.expenses.count} gastos, #{user.incomes.count} ganhos, #{user.investments.count} investimentos."
+  # Transporte (Posto de gasolina/Uber)
+  3.times do 
+    user.expenses.create!(
+      date: current_month.change(day: rand(1..28)),
+      value: rand(50.0..120.0).round(2),
+      expense_type: "Transporte",
+      description: "Combustível / Uber"
+    )
+  end
+
+  # Lazer (Final de semana)
+  user.expenses.create!(
+    date: current_month.change(day: rand(15..25)),
+    value: rand(100.0..400.0).round(2),
+    expense_type: "Lazer",
+    description: "Jantar / Cinema"
+  )
+
+  # Saúde (Ocasional)
+  if current_month.month % 3 == 0
+    user.expenses.create!(
+      date: current_month.change(day: 15),
+      value: rand(100.0..250.0).round(2),
+      expense_type: "Saúde",
+      description: "Farmácia / Consulta"
+    )
+  end
+
+  # --- INVESTIMENTOS ---
+  user.investments.create!(
+    date: current_month.change(day: 12),
+    value: 500.00,
+    investment_type: "Renda Fixa",
+    description: "Aporte Mensal Tesouro"
+  )
+
+  current_month = current_month.next_month
 end
 
-puts "Seed concluído."
-puts "  Login: teste@mtracker.com / 123456"
+puts "Seed finalizado com sucesso!"
+puts "Estatísticas para #{user.email}:"
+puts "  - Incomes: #{user.incomes.count}"
+puts "  - Expenses: #{user.expenses.count}"
+puts "  - Investments: #{user.investments.count}"
+puts "Login: teste@mtracker.com / 123456"
