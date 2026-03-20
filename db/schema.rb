@@ -48,6 +48,7 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_19_235217) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.decimal "interest_rate", precision: 8, scale: 4
   end
 
   create_table "messages", force: :cascade do |t|
