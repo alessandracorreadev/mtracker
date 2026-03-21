@@ -5,19 +5,35 @@ class Investment < ApplicationRecord
   after_commit -> { Rails.cache.delete("ai_context_#{user_id}") }
 
   def current_value
+    value_at(Date.today)
+  end
+
+  def value_at(target_date)
+    return value if target_date <= date
     return value unless interest_rate.present? && interest_rate > 0
 
-    # Calcula meses entre a data do investimento e hoje
-    months = (Date.today.year * 12 + Date.today.month) - (date.year * 12 + date.month)
-    return value if months <= 0
+    # Number of days elapsed
+    days = (target_date - date).to_i
+    return value if days <= 0
 
-    # Juros compostos mensais baseados na taxa anual
-    monthly_rate = (interest_rate / 100.0) / 12.0
-    (value * (1 + monthly_rate)**months).round(2)
+    # Daily compounding based on annual rate
+    daily_rate = (interest_rate / 100.0) / 365.0
+    (value * (1 + daily_rate)**days).round(2)
+  end
+
+  def yield_in_period(start_date, end_date)
+    # The yield earned within this specific window of time
+    # (Value at end of month) - (Value at start of month or investment date)
+    initial_checkpoint = [start_date, date].max
+    
+    val_end   = value_at(end_date)
+    val_start = value_at(initial_checkpoint)
+    
+    (val_end - val_start).round(2)
   end
 
   def accumulated_yield
-    current_value - value
+    (current_value - value).round(2)
   end
 
   validates :value, :date, :description, :investment_type, presence: true

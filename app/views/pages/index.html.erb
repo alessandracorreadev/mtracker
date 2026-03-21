@@ -22,13 +22,24 @@
       <div class="card-body p-4 p-md-5">
         <div class="row align-items-center">
           <div class="col-md-7">
-            <h6 class="text-uppercase text-muted small fw-bold mb-2" style="letter-spacing: 1px;">Saldo Consolidado</h6>
-            <h2 class="display-5 fw-bolder mb-0 text-success"><%= number_to_currency(@balance, unit: "R$ ", separator: ",", delimiter: ".") %></h2>
+            <h6 class="text-uppercase text-muted small fw-bold mb-2" style="letter-spacing: 1px;">Saldo Líquido no Período</h6>
+            <h2 class="display-5 fw-bolder mb-1 <%= @balance >= 0 ? 'text-success' : 'text-danger' %>">
+              <%= number_to_currency(@balance, unit: "R$ ", separator: ",", delimiter: ".") %>
+            </h2>
+            <div class="small">
+              <span class="text-muted">Desempenho Real:</span>
+              <span class="fw-bold <%= @net_growth >= 0 ? 'text-success' : 'text-danger' %> ms-1">
+                <%= number_to_currency(@net_growth, unit: "R$ ") %>
+              </span>
+            </div>
           </div>
           <div class="col-md-5 text-md-end mt-4 mt-md-0">
-            <div class="d-inline-flex align-items-center p-3 rounded-4 bg-success bg-opacity-10">
-              <i class="fa-solid fa-scale-balanced me-2 text-success fs-4"></i>
-              <span class="text-success fw-bold h5 mb-0"><%= @balance >= 0 ? 'Positivo' : 'Atenção' %></span>
+            <div class="p-3 rounded-4 <%= @total_yield >= 0 ? 'bg-success bg-opacity-10' : 'bg-danger bg-opacity-10' %> d-inline-block">
+              <div class="small text-muted text-uppercase fw-bold mb-1" style="font-size: 0.7rem;">Rendimento da Carteira</div>
+              <div class="<%= @total_yield >= 0 ? 'text-success' : 'text-danger' %> fw-bold h4 mb-0">
+                <i class="fa-solid fa-chart-line me-1"></i>
+                +<%= number_to_currency(@total_yield, unit: "R$ ") %>
+              </div>
             </div>
           </div>
         </div>
@@ -70,13 +81,13 @@
             <i class="fa-solid fa-piggy-bank fs-4"></i>
           </div>
           <div class="w-100">
-            <h6 class="card-subtitle text-muted mb-1 small text-uppercase fw-bold">Aportes</h6>
-            <div class="d-flex align-items-baseline justify-content-between">
-              <p class="card-value mb-0 h4 fw-bold"><%= number_to_currency(@total_investments, unit: "R$ ", separator: ",", delimiter: ".") %></p>
-              <% if @total_yield > 0 %>
-                <span class="badge bg-success bg-opacity-10 text-success border-0 small">+<%= number_to_currency(@total_yield, unit: "") %></span>
-              <% end %>
-            </div>
+            <h6 class="card-subtitle text-muted mb-1 small text-uppercase fw-bold">Patrimônio Total</h6>
+            <p class="card-value mb-0 h4 fw-bold"><%= number_to_currency(@total_investments_current_value, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+            <% if @total_investments_cost > 0 %>
+              <div class="text-primary smaller mt-1 fw-medium" style="font-size: 0.7rem;">
+                +<%= number_to_currency(@total_investments_cost, unit: "R$") %> aporte
+              </div>
+            <% end %>
           </div>
         </div>
       </div>
@@ -136,8 +147,8 @@
             <div class="chart-container" style="position: relative;">
               <canvas id="investments-chart"></canvas>
               <div class="chart-center-label position-absolute top-50 start-50 translate-middle text-center w-100" style="pointer-events: none;">
-                <span class="d-block small text-muted text-uppercase fw-bold" style="font-size: 0.55rem; letter-spacing: 0.5px;">Total Investido</span>
-                <span class="d-block h6 fw-bolder mb-0"><%= number_to_currency(@total_investments, unit: "", precision: 0) %></span>
+                <span class="d-block small text-muted text-uppercase fw-bold" style="font-size: 0.55rem; letter-spacing: 0.5px;">Patrimônio Atual</span>
+                <span class="d-block h6 fw-bolder mb-0"><%= number_to_currency(@total_investments_current_value, unit: "", precision: 0) %></span>
               </div>
             </div>
           </div>

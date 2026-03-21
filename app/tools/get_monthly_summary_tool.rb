@@ -14,9 +14,15 @@ class GetMonthlySummaryTool < RubyLLM::Tool
     start_date = Date.new(year.to_i, month.to_i, 1)
     end_date   = start_date.end_of_month
 
-    total_incomes  = @user.incomes.where(date: start_date..end_date).sum(:value)
-    total_expenses = @user.expenses.where(date: start_date..end_date).sum(:value)
-    balance        = total_incomes - total_expenses
+    total_incomes    = @user.incomes.where(date: start_date..end_date).sum(:value) || 0
+    total_expenses   = @user.expenses.where(date: start_date..end_date).sum(:value) || 0
+    total_aportes    = @user.investments.where(date: start_date..end_date).sum(:value) || 0
+    
+    # Portfolio yield in this month (all investments)
+    total_yield      = @user.investments.map { |i| i.yield_in_period(start_date, end_date) }.sum
+    
+    balance          = total_incomes - total_expenses - total_aportes
+    net_growth       = (total_incomes - total_expenses) + total_yield
 
     top_categories = @user.expenses
                           .where(date: start_date..end_date)
@@ -30,9 +36,12 @@ class GetMonthlySummaryTool < RubyLLM::Tool
     income_count  = @user.incomes.where(date: start_date..end_date).count
 
     "Resumo de #{start_date.strftime('%B %Y')}:\n" \
-    "  Receitas: R$#{"%.2f" % total_incomes} (#{income_count} lançamentos)\n" \
-    "  Despesas: R$#{"%.2f" % total_expenses} (#{expense_count} lançamentos)\n" \
-    "  Saldo do mês: R$#{"%.2f" % balance}#{balance >= 0 ? " (positivo)" : " (negativo)"}\n" \
+    "  Receitas: R$#{"%.2f" % total_incomes} (#{income_count})\n" \
+    "  Despesas: R$#{"%.2f" % total_expenses} (#{expense_count})\n" \
+    "  Aportes (Investimentos): R$#{"%.2f" % total_aportes}\n" \
+    "  Rendimento da Carteira: R$#{"%.2f" % total_yield}\n" \
+    "  Saldo Líquido (Disponível): R$#{"%.2f" % balance}\n" \
+    "  Evolução Patrimonial (Real): R$#{"%.2f" % net_growth}\n" \
     "  Maiores categorias de gasto: #{top_categories.any? ? top_categories.join(", ") : "nenhuma"}"
   rescue => e
     "Erro ao calcular resumo: #{e.message}"

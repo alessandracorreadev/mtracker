@@ -30,11 +30,31 @@ class PagesController < ApplicationController
       @investments = current_user.investments.where(date: range)
     end
 
+    # 1. Financial Flows (Strictly in the selected period)
     @total_expenses = @expenses.sum(:value) || 0
     @total_incomes = @incomes.sum(:value) || 0
-    @total_investments = @investments.map(&:current_value).sum || 0
-    @total_yield = @total_investments - (@investments.sum(:value) || 0)
-    @balance = @total_incomes - @total_expenses
+    # Monthly Aportes (New money invested this month)
+    @total_investments_cost = @investments.sum(:value) || 0
+    
+    # 2. Portfolio Position (Full history)
+    @portfolio = current_user.investments
+    @total_portfolio_cost = @portfolio.sum(:value) || 0
+    if filter_all
+      @total_yield = @portfolio.map(&:accumulated_yield).sum
+      @total_investments_current_value = @portfolio.map(&:current_value).sum
+    else
+      # Interest earned by the entire portfolio strictly during the month/range
+      @total_yield = @portfolio.map { |i| i.yield_in_period(start_date, end_date) }.sum
+      # Total wealth in assets at the exact end of the period
+      @total_investments_current_value = @portfolio.map { |i| i.value_at(end_date) }.sum
+    end
+
+    # 3. BALANCES
+    # Liquid Balance (Cash in hand) = Incomes - Expenses - Investment Costs
+    @balance = @total_incomes - @total_expenses - @total_investments_cost
+    
+    # Net Growth = (Incomes - Expenses) + Yield
+    @net_growth = (@total_incomes - @total_expenses) + @total_yield
 
     @expenses_by_category = @expenses
       .where.not(expense_type: [nil, ""])

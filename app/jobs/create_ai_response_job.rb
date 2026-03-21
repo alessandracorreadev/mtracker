@@ -102,8 +102,14 @@ class CreateAiResponseJob < ApplicationJob
   def build_system_instructions(user)
     total_incomes     = user.incomes.sum(:value) || 0
     total_expenses    = user.expenses.sum(:value) || 0
-    total_investments = user.investments.sum(:value) || 0
-    balance = total_incomes - total_expenses
+    total_investments_cost = user.investments.sum(:value) || 0
+    total_investments_current = user.investments.map(&:current_value).sum
+    
+    # Liquid balance = what's left in the pocket
+    liquid_balance = total_incomes - total_expenses - total_investments_cost
+    
+    # Total yield since beginning
+    total_yield = total_investments_current - total_investments_cost
 
     monthly_expenses = user.expenses.where(date: 6.months.ago..Date.today)
                            .group_by { |e| e.date.strftime("%B %Y") }
@@ -122,14 +128,16 @@ class CreateAiResponseJob < ApplicationJob
 
       CRITICAL STYLE RULES:
       1. PLAIN TEXT ONLY: Never use Markdown (no **, no #, no `-`, no ```).
-      2. BE CONCISE BUT COMPLETE: Always prioritize being direct and brief, but ensure you complete your thought and provide a helpful answer.
+      2. BE CONCISE BUT COMPLETE: Always prioritize being direct and brief.
       3. LANGUAGE: Always respond in Portuguese (PT-BR).
 
-      Financial Context:
+      Financial Context (Consolidated):
       - Total Incomes: R$#{total_incomes}
       - Total Expenses: R$#{total_expenses}
-      - Current Balance: R$#{balance}
-      - Total Investments: R$#{total_investments}
+      - Total Investments (Cost): R$#{total_investments_cost}
+      - Portfolio Current Value: R$#{total_investments_current}
+      - Portfolio Total Yield: R$#{total_yield}
+      - Liquid Balance (Available): R$#{liquid_balance}
 
       Monthly Summaries (Last 6 Months):
       - Expenses: #{monthly_expenses.map { |k, v| "#{k}: R$#{v}" }.join(", ")}
