@@ -4,6 +4,23 @@
       collection: Goal::TYPES.map { |k, v| [v, k] },
       include_blank: "Selecione o tipo" %>
   <%= f.input :target_value, label: "Valor alvo (R$)", input_html: { step: "0.01", min: "0" } %>
+  
+  <div id="goal-category-wrapper" style="<%= @goal.goal_type == 'savings' ? 'display: none;' : '' %>">
+    <datalist id="expense-categories-datalist">
+      <option value="Total">
+      <% current_user.expenses.select(:expense_type).distinct.pluck(:expense_type).compact.reject(&:blank?).uniq.sort.each do |cat| %>
+        <option value="<%= cat %>">
+      <% end %>
+    </datalist>
+    <datalist id="investment-categories-datalist">
+      <option value="Total">
+      <% current_user.investments.select(:investment_type).distinct.pluck(:investment_type).compact.reject(&:blank?).uniq.sort.each do |cat| %>
+        <option value="<%= cat %>">
+      <% end %>
+    </datalist>
+    <%= f.input :category, label: "Categoria alvo (Opcional)", hint: "Deixe 'Total' para meta global ou digite uma Categoria.", hint_html: { style: "color: var(--theme-text-muted) !important; font-size: 0.8rem; opacity: 0.85;" }, input_html: { list: @goal.goal_type == 'investment' ? "investment-categories-datalist" : "expense-categories-datalist", placeholder: "Total" } %>
+  </div>
+
   <div class="row">
     <div class="col-sm-6">
       <%= f.input :month, as: :select, label: "Mês",
@@ -18,3 +35,41 @@
     <%= link_to "Cancelar", goals_path, class: "btn btn-outline-secondary" %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    setupGoalTypeToggle();
+  });
+  
+  setupGoalTypeToggle();
+
+  function setupGoalTypeToggle() {
+    const typeSelect = document.getElementById('goal_goal_type');
+    const categoryWrapper = document.getElementById('goal-category-wrapper');
+    const categoryInput = document.getElementById('goal_category');
+    
+    function applyCategoryLogic(val) {
+      if (val === 'savings') {
+        categoryWrapper.style.display = 'none';
+        if (categoryInput) categoryInput.value = '';
+      } else {
+        categoryWrapper.style.display = 'block';
+        if (categoryInput) {
+          if (val === 'expense') {
+            categoryInput.setAttribute('list', 'expense-categories-datalist');
+          } else if (val === 'investment') {
+            categoryInput.setAttribute('list', 'investment-categories-datalist');
+          }
+        }
+      }
+    }
+
+    if (typeSelect && categoryWrapper) {
+      typeSelect.addEventListener('change', function(e) {
+        applyCategoryLogic(e.target.value);
+      });
+      // trigger on load
+      applyCategoryLogic(typeSelect.value);
+    }
+  }
+</script>

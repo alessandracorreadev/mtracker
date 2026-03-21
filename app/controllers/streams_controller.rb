@@ -27,8 +27,8 @@ class StreamsController < ApplicationController
         sse.write({ content: full_response }, event: 'chunk')
       end
 
-      # Transaction detection: parse JSON marker if present
-      clean_content = parse_and_save_transaction(full_response, current_user)
+      # Action detection: parse JSON markers if present
+      clean_content = parse_and_save_actions(full_response, current_user)
 
       # Save the final assistant message (without the hidden JSON marker)
       @chat.messages.create!(role: 'assistant', content: clean_content)
@@ -58,10 +58,17 @@ class StreamsController < ApplicationController
     total_expenses    = user.expenses.sum(:value) || 0
     total_investments = user.investments.sum(:value) || 0
     balance = total_incomes - total_expenses
+    
+    # Portfolio & Savings Indicators
+    total_yield = user.investments.map(&:accumulated_yield).sum
+    savings_rate = total_incomes > 0 ? (((total_incomes - total_expenses) / total_incomes) * 100).round(1) : 0
 
     recent_transactions = []
     recent_transactions += user.incomes.order(date: :desc).limit(3).map  { |i| "Income: #{i.description} (R$#{i.value}) on #{i.date}" }
     recent_transactions += user.expenses.order(date: :desc).limit(3).map { |e| "Expense: #{e.description} (R$#{e.value}) on #{e.date}" }
+
+    current_goals = user.goals.where(month: Date.today.month, year: Date.today.year)
+    goals_text = current_goals.map { |g| "- #{g.description} (#{Goal::TYPES[g.goal_type]}): R$#{g.target_value} (Progresso: #{g.progress_percent}%)" }
 
     system_instructions = <<~INSTRUCTIONS
       You are a helpful financial assistant for the mtracker app. Respond in the same language as the user.
@@ -72,10 +79,15 @@ class StreamsController < ApplicationController
       - Total Incomes: R$#{total_incomes}
       - Total Expenses: R$#{total_expenses}
       - Current Balance: R$#{balance}
-      - Total Investments: R$#{total_investments}
+      - Total Investments Cost: R$#{total_investments}
+      - Total Investments Yield: R$#{total_yield}
+      - Savings Rate (all-time): #{savings_rate}%
+
+      Current Month Goals:
+      #{goals_text.any? ? goals_text.join("\n      ") : "No active goals for this month."}
 
       Recent Transactions:
-      #{recent_transactions.any? ? recent_transactions.join("\n") : "No recent transactions found."}
+      #{recent_transactions.any? ? recent_transactions.join("\n      ") : "No recent transactions found."}
 
       --- TRANSACTION DETECTION ---
       If the user describes a financial transaction, append a JSON block at the very end:
@@ -87,7 +99,19 @@ class StreamsController < ApplicationController
       - "category" in Portuguese
       - For income, use "income_type" instead of "category"
       - For investment, use "investment_type" instead of "category"
-      - Only include if confident a transaction was described. Do NOT explain the block.
+
+      --- GOAL CREATION ---
+      If the user wants to set a financial goal, append a JSON block at the very end:
+      [GOAL:{"description":"Economizar para viagem","goal_type":"savings","target_value":1500.0,"month":#{Date.today.month},"year":#{Date.today.year}}]
+      If the goal is specific to a category (e.g., "Gastar menos com Lazer"), append the category field:
+      [GOAL:{"description":"Limitar Lazer","goal_type":"expense","target_value":600.0,"month":#{Date.today.month},"year":#{Date.today.year},"category":"Lazer"}]
+      Rules:
+      - "goal_type": "savings", "expense", or "investment" (savings=economizar, expense=limite de gastos, investment=investir)
+      - "target_value": positive number
+      - "month" & "year": integer values
+      - "category": (optional) string representing the expense_type or investment_type to filter by. Do not use for "savings" goals.
+      
+      You can output BOTH markers in the same response if the user requests both. Only include markers if confident. Do NOT explain the markers to the user.
     INSTRUCTIONS
 
     llm = RubyLLM.chat(model: 'gpt-4o').with_instructions(system_instructions)
@@ -99,39 +123,64 @@ class StreamsController < ApplicationController
     llm
   end
 
-  def parse_and_save_transaction(content, user)
-    match = content.match(/\[TRANSACTION:(.*?)\]/m)
-    return content unless match
+  def parse_and_save_actions(content, user)
+    clean_content = content.dup
 
-    json_str = match[1].strip
-    data = JSON.parse(json_str)
+    # Process Transactions
+    if match = clean_content.match(/\[TRANSACTION:(.*?)\]/m)
+      begin
+        json_str = match[1].strip
+        data = JSON.parse(json_str)
 
-    case data['type']
-    when 'expense'
-      user.expenses.create!(
-        description: data['description'],
-        value: data['value'].to_f,
-        date: Date.parse(data['date']),
-        expense_type: data['category']
-      )
-    when 'income'
-      user.incomes.create!(
-        description: data['description'],
-        value: data['value'].to_f,
-        date: Date.parse(data['date']),
-        income_type: data['income_type'] || data['category']
-      )
-    when 'investment'
-      user.investments.create!(
-        description: data['description'],
-        value: data['value'].to_f,
-        date: Date.parse(data['date']),
-        investment_type: data['investment_type'] || data['category']
-      )
+        case data['type']
+        when 'expense'
+          user.expenses.create!(
+            description: data['description'],
+            value: data['value'].to_f,
+            date: Date.parse(data['date']),
+            expense_type: data['category']
+          )
+        when 'income'
+          user.incomes.create!(
+            description: data['description'],
+            value: data['value'].to_f,
+            date: Date.parse(data['date']),
+            income_type: data['income_type'] || data['category']
+          )
+        when 'investment'
+          user.investments.create!(
+            description: data['description'],
+            value: data['value'].to_f,
+            date: Date.parse(data['date']),
+            investment_type: data['investment_type'] || data['category']
+          )
+        end
+        clean_content = clean_content.gsub(/\[TRANSACTION:.*?\]/m, '').strip
+      rescue JSON::ParserError, ArgumentError
+        # ignore error and leave content as is
+      end
     end
 
-    content.gsub(/\[TRANSACTION:.*?\]/m, '').strip
-  rescue JSON::ParserError, ArgumentError
-    content
+    # Process Goals
+    if match = clean_content.match(/\[GOAL:(.*?)\]/m)
+      begin
+        json_str = match[1].strip
+        data = JSON.parse(json_str)
+
+        user.goals.create!(
+          description: data['description'],
+          goal_type: data['goal_type'],
+          target_value: data['target_value'].to_f,
+          month: data['month'].to_i,
+          year: data['year'].to_i,
+          category: data['category']
+        )
+        clean_content = clean_content.gsub(/\[GOAL:.*?\]/m, '').strip
+      rescue JSON::ParserError, ArgumentError
+        # ignore error
+      end
+    end
+
+    clean_content
   end
 end

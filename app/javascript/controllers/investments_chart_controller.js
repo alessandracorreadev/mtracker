@@ -18,9 +18,40 @@ export default class extends Controller {
     const colorsRaw = this.element.dataset.chartColors
     const colors = colorsRaw ? JSON.parse(colorsRaw) : ["#05b355", "#0d1b2a"]
 
+    const percentageLabelsPlugin = {
+      id: "percentageLabels",
+      afterDatasetsDraw(chart, args, options) {
+        const { ctx } = chart
+        ctx.save()
+
+        chart.data.datasets.forEach((dataset, i) => {
+          const meta = chart.getDatasetMeta(i)
+          let total = 0
+          dataset.data.forEach(val => total += Number(val))
+
+          meta.data.forEach((element, index) => {
+            const val = Number(dataset.data[index])
+            if (val === 0) return
+
+            const percentage = ((val / total) * 100).toFixed(0) + "%"
+            
+            if ((val / total) > 0.05) {
+              const { x, y } = element.tooltipPosition()
+              ctx.fillStyle = "#ffffff"
+              ctx.font = "bold 12px sans-serif"
+              ctx.textAlign = "center"
+              ctx.textBaseline = "middle"
+              ctx.fillText(percentage, x, y)
+            }
+          })
+        })
+        ctx.restore()
+      }
+    }
 
     this.chart = new Chart(canvas, {
       type: "doughnut",
+      plugins: [percentageLabelsPlugin],
       data: {
         labels,
         datasets: [
@@ -36,7 +67,7 @@ export default class extends Controller {
       options: {
         responsive: true,
         maintainAspectRatio: true,
-        cutout: "75%",
+        cutout: "60%",
         plugins: {
           legend: { display: false },
           tooltip: {

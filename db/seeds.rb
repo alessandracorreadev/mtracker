@@ -9,103 +9,240 @@ end
 user.expenses.destroy_all
 user.incomes.destroy_all
 user.investments.destroy_all
+user.goals.destroy_all
 
-puts "Gerando dados de Março 2025 até Março 2026..."
+puts "Gerando dados detalhados de Janeiro 2024 até Março 2026..."
 
-start_date = Date.new(2025, 3, 1)
+start_date = Date.new(2024, 1, 1)
 end_date = Date.new(2026, 3, 31)
 current_month = start_date
 
+# Categorias
+income_categories = ["Salário", "Freelance", "Rendimentos", "Cashback", "Reembolso", "Bônus", "Vendas"]
+expense_categories = ["Moradia", "Alimentação", "Transporte", "Lazer", "Saúde", "Educação", "Pessoal", "Pets", "Taxas", "Doações"]
+investment_categories = ["Tesouro Direto", "CDB", "LCI", "Fundo Imobiliário (FII)", "Ações do Brasil", "Ações Internacionais (BDR)", "Criptomoedas", "Reserva de Emergência"]
+
+# Dados base
+salario_base = 6500.00
+aluguel = 1800.00
+condominio = 450.00
+plano_saude = 350.00
+internet = 120.00
+
 while current_month <= end_date
-  # --- RENDAS (Incomes) ---
+  # Aumentos anuais
+  if current_month.month == 1 && current_month.year > 2024
+    salario_base *= 1.08
+    aluguel *= 1.05
+    condominio *= 1.05
+  end
+
+  # ==========================================
+  # RENDAS (Incomes)
+  # ==========================================
+  
   # Salário mensal fixo
   user.incomes.create!(
     date: current_month.change(day: 5),
-    value: 5000.00,
+    value: salario_base.round(2),
     income_type: "Salário",
-    description: "Salário Mensal - #{current_month.strftime('%B %Y')}"
+    description: "Salário Mensal - #{current_month.strftime('%B')}"
   )
 
-  # Freelance ocasional (em alguns meses)
-  if [true, false].sample
+  # Bônus ou 13º no final do ano
+  if current_month.month == 12 || current_month.month == 6
     user.incomes.create!(
       date: current_month.change(day: 20),
-      value: [400, 600, 850].sample,
-      income_type: "Freelance",
-      description: "Projeto Extra"
+      value: (salario_base * 0.5).round(2),
+      income_type: "Bônus",
+      description: current_month.month == 12 ? "13º Salário (2ª Parcela)" : "Recesso de Meio de Ano"
     )
   end
 
-  # --- GASTOS (Expenses) ---
-  # Moradia (Fixo)
-  user.expenses.create!(
-    date: current_month.change(day: 10),
-    value: 1500.00,
-    expense_type: "Moradia",
-    description: "Aluguel + Condomínio"
+  # Freelance ocasional (30% de chance no mês)
+  if rand < 0.3
+    user.incomes.create!(
+      date: current_month.change(day: rand(5..28)),
+      value: rand(800.0..2500.0).round(2),
+      income_type: "Freelance",
+      description: ["Projeto Web", "Consultoria Técnica", "Desenvolvimento API", "Design de Tela"].sample
+    )
+  end
+
+  # Pequenas entradas (Cashback, Vendas)
+  user.incomes.create!(
+    date: current_month.change(day: rand(10..28)),
+    value: rand(20.0..150.0).round(2),
+    income_type: ["Cashback", "Vendas", "Reembolso"].sample,
+    description: "Entrada Avulsa"
   )
 
-  # Alimentação (Vários gastos no mês)
+  # ==========================================
+  # GASTOS (Expenses)
+  # ==========================================
+
+  # Despesas Fixas Todo Mês
+  [
+    { val: aluguel, type: "Moradia", desc: "Aluguel" },
+    { val: condominio, type: "Moradia", desc: "Condomínio" },
+    { val: plano_saude, type: "Saúde", desc: "Plano de Saúde SulAmérica" },
+    { val: internet, type: "Moradia", desc: "Internet Fibra" },
+    { val: rand(120.0..220.0).round(2), type: "Moradia", desc: "Conta de Energia" },
+    { val: rand(60.0..100.0).round(2), type: "Moradia", desc: "Conta de Água" }
+  ].each do |fixo|
+    user.expenses.create!(
+      date: current_month.change(day: rand(5..15)),
+      value: fixo[:val],
+      expense_type: fixo[:type],
+      description: fixo[:desc]
+    )
+  end
+
+  # Alimentação (Mercado toda semana + Padaria)
   4.times.each_with_index do |_, i|
     user.expenses.create!(
-      date: current_month.change(day: 5 + (i * 7)),
-      value: rand(150.0..350.0).round(2),
+      date: current_month.change(day: 1 + (i * 7)),
+      value: rand(250.0..450.0).round(2), # Mercado
       expense_type: "Alimentação",
       description: "Supermercado Semana #{i+1}"
     )
+    # Padaria / iFood
+    2.times do
+      user.expenses.create!(
+        date: current_month.change(day: rand(1..28)),
+        value: rand(40.0..120.0).round(2),
+        expense_type: "Alimentação",
+        description: ["Padaria Pão Kent", "iFood Mcdonalds", "Hamburgueria", "Pizzaria delivery"].sample
+      )
+    end
   end
 
-  # Transporte (Posto de gasolina/Uber)
-  3.times do 
+  # Transporte (Gasolina/Uber)
+  4.times do 
     user.expenses.create!(
       date: current_month.change(day: rand(1..28)),
-      value: rand(50.0..120.0).round(2),
+      value: rand(40.0..180.0).round(2),
       expense_type: "Transporte",
-      description: "Combustível / Uber"
+      description: ["Posto Ipiranga", "Posto Shell", "Uber Viagem", "99App Corridas", "Mecânica (Prevenção)"].sample
     )
   end
 
-  # Lazer (Final de semana)
-  user.expenses.create!(
-    date: current_month.change(day: rand(15..25)),
-    value: rand(100.0..400.0).round(2),
-    expense_type: "Lazer",
-    description: "Jantar / Cinema"
-  )
+  # Lazer (Final de semana, shows, assinaturas)
+  user.expenses.create!(date: current_month.change(day: 5), value: 55.90, expense_type: "Lazer", description: "Assinatura Netflix Premium")
+  user.expenses.create!(date: current_month.change(day: 10), value: 21.90, expense_type: "Lazer", description: "Assinatura Spotify")
+  user.expenses.create!(date: current_month.change(day: 12), value: 39.90, expense_type: "Lazer", description: "Gympass / Academia")
 
-  # Saúde (Ocasional)
-  if current_month.month % 3 == 0
+  rand(2..5).times do
     user.expenses.create!(
-      date: current_month.change(day: 15),
-      value: rand(100.0..250.0).round(2),
-      expense_type: "Saúde",
-      description: "Farmácia / Consulta"
+      date: current_month.change(day: rand(10..28)),
+      value: rand(80.0..450.0).round(2),
+      expense_type: "Lazer",
+      description: ["Cinema Cinemark VIP", "Bar com amigos", "Restaurante Especial FDS", "Show/Evento Ticket", "Compra de Jogo PS5", "Passeio Turístico / Viagem Curta"].sample
     )
   end
 
-  # --- INVESTIMENTOS ---
-  investment_types = [
-    { type: "CDB", rate: rand(11.5..13.5).round(2) },
-    { type: "Tesouro SELIC", rate: 12.75 },
-    { type: "FII", rate: rand(8.0..11.0).round(2) },
-    { type: "Ações", rate: rand(12.0..18.0).round(2) }
-  ]
-  choice = investment_types.sample
+  # Pets, Educação, Cuidados, Taxas (aleatórios)
+  if rand < 0.6
+    user.expenses.create!(date: current_month.change(day: rand(5..28)), value: rand(150.0..300.0).round(2), expense_type: "Pets", description: "Ração Premium Golden")
+  end
+  if rand < 0.4
+    user.expenses.create!(date: current_month.change(day: rand(5..28)), value: rand(120.0..800.0).round(2), expense_type: "Educação", description: ["Curso Udemy Promocional", "Livros Técnicos", "Mensalidade Curso de Idiomas", "Workshop"].sample)
+  end
+  user.expenses.create!(date: current_month.change(day: rand(5..28)), value: rand(60.0..250.0).round(2), expense_type: "Pessoal", description: ["Corte de Cabelo/Barba", "Vestuário / Perfume", "Produtos de Cuidados", "Farmácia Base"].sample)
 
+  # ==========================================
+  # INVESTIMENTOS (Investments)
+  # ==========================================
+  
+  # Aporte Fixo em Reserva
   user.investments.create!(
-    date: current_month.change(day: 12),
-    value: [500, 1000, 1500].sample,
-    investment_type: choice[:type],
-    description: "Aporte Mensal #{choice[:type]}",
-    interest_rate: choice[:rate]
+    date: current_month.change(day: 10),
+    value: 500.00,
+    investment_type: "Reserva de Emergência",
+    description: "Aporte Mensal CDB Liquidez Inter",
+    interest_rate: 11.5
   )
+
+  # Diversificação do Mês
+  rand(1..3).times do
+    inv = [
+      { t: "Fundo Imobiliário (FII)", rate: rand(9.0..12.5), desc: ["HGLG11 - Logística", "KNRI11 - Salas", "MXRF11 - Papel", "VISC11 - Shopping"].sample },
+      { t: "Ações do Brasil", rate: rand(8.0..18.0), desc: ["ITUB4", "WEGE3", "VALE3", "PETR4", "EGIE3 Energia"].sample },
+      { t: "CDB", rate: rand(12.0..14.5), desc: "CDB IPCA+ Banco Master" },
+      { t: "Ações Internacionais (BDR)", rate: rand(10.0..25.0), desc: ["AAPL34 Apple", "MSFT34 Microsoft", "GOGL34 Google", "AMZO34 Amazon"].sample },
+      { t: "Criptomoedas", rate: rand(15.0..60.0), desc: ["Bitcoin (BTC) Frio", "Ethereum (ETH) Staking"].sample },
+      { t: "Tesouro Direto", rate: rand(10.0..13.0), desc: "Tesouro IPCA+ 2035" }
+    ].sample
+
+    user.investments.create!(
+      date: current_month.change(day: rand(12..28)),
+      value: rand(200.0..1500.0).round(2),
+      investment_type: inv[:t],
+      description: inv[:desc],
+      interest_rate: inv[:rate].round(2)
+    )
+  end
 
   current_month = current_month.next_month
 end
 
-puts "Seed finalizado com sucesso!"
-puts "Estatísticas para #{user.email}:"
-puts "  - Incomes: #{user.incomes.count}"
-puts "  - Expenses: #{user.expenses.count}"
-puts "  - Investments: #{user.investments.count}"
-puts "Login: teste@mtracker.com / 123456"
+puts "Gerando Metas Inteligentes de Janeiro 2024 até Junho 2026..."
+
+# Agora vamos gerar metas de mês a mês de 24 a meio de 26
+goal_start_date = Date.new(2024, 1, 1)
+goal_end_date = Date.new(2026, 6, 30)
+current_goal_month = goal_start_date
+
+while current_goal_month <= goal_end_date
+  # Meta de Investimento
+  user.goals.create!(
+    description: "Aportes Longo Prazo",
+    goal_type: "investment",
+    target_value: rand(1500.0..3000.0).round(2),
+    month: current_goal_month.month,
+    year: current_goal_month.year
+  )
+
+  # Meta de Frear gastos
+  user.goals.create!(
+    description: "Limitar Gastos de Lazer a R$ 600",
+    goal_type: "expense",
+    target_value: 600.0,
+    month: current_goal_month.month,
+    year: current_goal_month.year,
+    category: "Lazer"
+  )
+  
+  # As vezes uma meta de renda (freelancers, vendas)
+  if rand < 0.5
+    user.goals.create!(
+      description: "Tirar renda de Freelance Extra",
+      goal_type: "savings", 
+      target_value: rand(800.0..1500.0).round(2),
+      month: current_goal_month.month,
+      year: current_goal_month.year
+    )
+  end
+
+  # Viagens ou compras
+  if [6, 7, 11, 12, 1].include?(current_goal_month.month)
+    user.goals.create!(
+      description: current_goal_month.month > 10 ? "Viagem de Fim de Ano" : "Férias de Julho",
+      goal_type: "savings",
+      target_value: rand(3000.0..6000.0).round(2),
+      month: current_goal_month.month,
+      year: current_goal_month.year
+    )
+  end
+
+  current_goal_month = current_goal_month.next_month
+end
+
+puts "Seed finalizado com sucesso e requinte!"
+puts "Estatísticas GERAIS para #{user.email}:"
+puts "  - Rendas: #{user.incomes.count} registros"
+puts "  - Gastos: #{user.expenses.count} registros"
+puts "  - Investimentos: #{user.investments.count} registros"
+puts "  - Metas Estabelecidas: #{user.goals.count} metas"
+puts "Um total de #{user.incomes.count + user.expenses.count + user.investments.count + user.goals.count} artefatos financeiros criados de 2024 a meados 2026."
+puts "Login: teste@mtracker.com / Senha: 123456"
