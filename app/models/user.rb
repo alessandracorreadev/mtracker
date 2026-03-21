@@ -8,6 +8,7 @@ class User < ApplicationRecord
   has_many :incomes, dependent: :destroy
   has_many :investments, dependent: :destroy
   has_many :chats, dependent: :destroy
+  has_many :goals, dependent: :destroy
 
   validates :name, presence: true
 end
