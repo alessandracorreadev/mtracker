@@ -24,7 +24,8 @@ class CreateAiResponseJob < ApplicationJob
       GetMonthlyExpensesTool.new(@user),
       GetMonthlyIncomesTool.new(@user),
       GetMonthlySummaryTool.new(@user),
-      GetInvestmentsTool.new(@user)
+      GetInvestmentsTool.new(@user),
+      ShowTransactionSelectorTool.new
     )
 
     # Build context window by character budget, not message count

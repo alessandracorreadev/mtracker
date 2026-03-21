@@ -1,0 +1,30 @@
+<turbo-frame id="message_<%= message.id %>_wizard">
+  <div class="d-flex flex-column gap-2 mt-2 w-100" style="max-width: 250px;">
+    <%= link_to new_chat_wizard_expense_path(message.chat_id, message_id: message.id), class: "btn btn-sm text-start shadow-sm", style: "background-color: var(--theme-bg-main); border: 1px solid var(--theme-border); color: var(--theme-text-main); border-radius: 12px; transition: all 0.2s;" do %>
+      <div class="d-flex align-items-center p-1">
+        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; background-color: rgba(var(--bs-danger-rgb), 0.1); color: var(--theme-danger);">
+          <i class="fa-solid fa-arrow-down"></i>
+        </div>
+        <div class="fw-medium">Adicionar Gasto</div>
+      </div>
+    <% end %>
+
+    <%= link_to new_chat_wizard_income_path(message.chat_id, message_id: message.id), class: "btn btn-sm text-start shadow-sm", style: "background-color: var(--theme-bg-main); border: 1px solid var(--theme-border); color: var(--theme-text-main); border-radius: 12px; transition: all 0.2s;" do %>
+      <div class="d-flex align-items-center p-1">
+        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; background-color: rgba(var(--bs-success-rgb), 0.1); color: var(--theme-success);">
+          <i class="fa-solid fa-arrow-up"></i>
+        </div>
+        <div class="fw-medium">Adicionar Receita</div>
+      </div>
+    <% end %>
+
+    <%= link_to new_chat_wizard_investment_path(message.chat_id, message_id: message.id), class: "btn btn-sm text-start shadow-sm", style: "background-color: var(--theme-bg-main); border: 1px solid var(--theme-border); color: var(--theme-text-main); border-radius: 12px; transition: all 0.2s;" do %>
+      <div class="d-flex align-items-center p-1">
+        <div class="rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 32px; height: 32px; background-color: rgba(var(--bs-primary-rgb), 0.1); color: var(--theme-accent);">
+          <i class="fa-solid fa-piggy-bank"></i>
+        </div>
+        <div class="fw-medium">Criar Investimento</div>
+      </div>
+    <% end %>
+  </div>
+</turbo-frame>

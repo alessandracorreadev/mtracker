@@ -1,3 +1,16 @@
+<%= turbo_stream.append "messages" do %>
+  <%= render "messages/message", message: @message %>
+<% end %>
+
 <%= turbo_stream.update "chat_form_container" do %>
   <%= render "messages/form", chat: @chat, message: Message.new %>
+<% end %>
+
+<%= turbo_stream.append "messages" do %>
+  <script>
+    setTimeout(function() {
+      var container = document.getElementById("messages-container");
+      if(container) container.scrollTop = container.scrollHeight;
+    }, 50);
+  </script>
 <% end %>
