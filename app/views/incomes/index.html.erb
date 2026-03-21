@@ -1,8 +1,8 @@
 <div class="dashboard-page">
   <header class="dashboard-header d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
     <div>
-      <h1 class="dashboard-title text-success fw-bolder">Ganhos / Salários</h1>
-      <p class="dashboard-subtitle text-muted mb-0">Lista de receitas por mês</p>
+      <h1 class="dashboard-title text-success fw-bolder">Receitas</h1>
+      <p class="dashboard-subtitle text-muted mb-0">Gestão de entradas e salários</p>
     </div>
     <%= link_to new_income_path, class: "btn btn-primary" do %>
       <i class="fa-solid fa-plus me-1"></i> Novo ganho
@@ -12,39 +12,57 @@
   <% if @incomes.any? %>
     <% @incomes_by_month.each do |month, incomes| %>
       <% total = incomes.sum(&:value) %>
-      <div class="card rounded-3 shadow-sm overflow-hidden mb-4">
+      <div class="card border-0 rounded-4 shadow-sm overflow-hidden mb-4">
         <div class="card-header bg-transparent d-flex flex-wrap justify-content-between align-items-center gap-2 py-3">
           <h2 class="h5 mb-0 fw-bold"><%= l(month, format: :month_year) %></h2>
-          <span class="badge bg-secondary fs-6"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></span>
+          <span class="badge bg-success bg-opacity-10 text-success fs-6 fw-bold border-0"><%= number_to_currency(total, unit: "R$ ", separator: ",", delimiter: ".") %></span>
         </div>
         <div class="list-cards-wrapper">
           <% incomes.each do |income| %>
-            <div class="list-item-card">
-              <div class="list-item-card-body">
-                <div class="list-item-card-row">
-                  <span class="list-item-card-label">Data</span>
-                  <span><%= income.date.strftime("%d/%m/%Y") %></span>
+            <div class="list-item-card p-3 d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+              <div class="d-flex align-items-center gap-3 overflow-hidden" style="min-width: 0;">
+                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 bg-success bg-opacity-10 text-success" style="width: 46px; height: 46px;">
+                  <i class="fa-solid fa-arrow-trend-up fs-5"></i>
                 </div>
-                <div class="list-item-card-row">
-                  <span class="list-item-card-label">Descrição</span>
-                  <span><%= income.description.presence || "—" %></span>
+                <div class="d-flex flex-column text-truncate">
+                  <span class="fw-bold text-truncate" style="font-size: 1rem; color: var(--theme-text);"><%= income.description.presence || income.income_type.presence || "Ganho" %></span>
+                  <div class="d-flex align-items-center gap-2 small text-muted mt-1">
+                    <span class="text-truncate" style="max-width: 120px;"><%= income.income_type.presence || "Sem categoria" %></span>
+                    <i class="fa-solid fa-circle" style="font-size: 3px; opacity: 0.5;"></i>
+                    <span class="text-nowrap"><%= income.date.strftime("%d %b") %></span>
+                  </div>
                 </div>
-                <div class="list-item-card-row">
-                  <span class="list-item-card-label">Categoria</span>
-                  <span><%= income.income_type.presence || "—" %></span>
-                </div>
-                <div class="list-item-card-row list-item-card-value">
-                  <span class="list-item-card-label">Valor</span>
-                  <span class="fw-semibold"><%= number_to_currency(income.value, unit: "R$ ", separator: ",", delimiter: ".") %></span>
-                </div>
-                <div class="list-item-card-actions">
-                  <%= link_to edit_income_path(income), class: "btn btn-outline-secondary list-item-card-btn", title: "Editar" do %>
+              </div>
+
+              <div class="d-flex align-items-center gap-3 flex-shrink-0 ms-auto">
+                <span class="fw-bold text-success fs-6 text-nowrap">+ <%= number_to_currency(income.value, unit: "R$ ") %></span>
+                
+                <div class="d-none d-md-flex gap-1">
+                  <%= link_to edit_income_path(income), class: "btn btn-sm btn-outline-secondary border-0 rounded-circle", style: "width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;", title: "Editar" do %>
                     <i class="fa-solid fa-pen"></i>
                   <% end %>
-                  <%= link_to income_path(income), class: "btn btn-outline-danger list-item-card-btn", title: "Excluir",
-                      data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir este ganho?" } do %>
+                  <%= link_to income_path(income), class: "btn btn-sm btn-outline-danger border-0 rounded-circle", style: "width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;", title: "Excluir",
+                      data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir?" } do %>
                     <i class="fa-solid fa-trash"></i>
                   <% end %>
+                </div>
+                
+                <div class="dropdown d-md-none">
+                  <button class="btn btn-sm btn-link text-muted px-2 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4" style="background-color: var(--theme-bg-card);">
+                    <li>
+                      <%= link_to edit_income_path(income), class: "dropdown-item d-flex align-items-center gap-2 py-2" do %>
+                        <i class="fa-solid fa-pen text-muted"></i> Editar
+                      <% end %>
+                    </li>
+                    <li>
+                      <%= link_to income_path(income), class: "dropdown-item d-flex align-items-center gap-2 py-2 text-danger", data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir?" } do %>
+                        <i class="fa-solid fa-trash"></i> Excluir
+                      <% end %>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
@@ -53,7 +71,7 @@
       </div>
     <% end %>
   <% else %>
-    <div class="card rounded-3 shadow-sm">
+    <div class="card border-0 rounded-4 shadow-sm">
       <div class="card-body text-center py-5">
         <div class="text-muted mb-3">
           <i class="fa-solid fa-dollar-sign fa-3x"></i>

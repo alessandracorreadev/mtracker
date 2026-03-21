@@ -1,17 +1,15 @@
-<div id="stream_<%= stream_id %>">
-  <div class="d-flex w-100 justify-content-start">
-    <div class="chat-bubble assistant" style="min-width: 70px;">
-      <% if content.present? %>
-        <div style="white-space: pre-wrap;"><%= content %></div>
-      <% else %>
-        <div class="typing-indicator">
-          <span></span><span></span><span></span>
-        </div>
-      <% end %>
+<div id="stream_<%= stream_id %>" class="d-flex flex-column align-items-start mb-3">
+  <div class="chat-bubble assistant" style="min-width: 70px;">
+    <% if content.present? %>
+      <div style="white-space: pre-wrap;"><%= content %></div>
+    <% else %>
+      <div class="typing-indicator">
+        <span></span><span></span><span></span>
+      </div>
+    <% end %>
 
-      <% if local_assigns[:final] %>
-        <!-- Mark as final for frontend if needed -->
-      <% end %>
-    </div>
+    <% if local_assigns[:final] %>
+      <!-- Mark as final for frontend if needed -->
+    <% end %>
   </div>
 </div>

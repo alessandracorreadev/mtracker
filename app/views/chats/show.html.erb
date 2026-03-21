@@ -54,12 +54,12 @@
       transform: translateY(0) scale(1);
     }
     [data-theme="dark"] .chat-bubble.assistant {
-      background-color: #2e3338;
-      color: #f1f3f5;
-      border-color: #495057;
+      background-color: var(--theme-bg-card);
+      color: var(--theme-text);
+      border-color: var(--theme-border);
     }
     [data-theme="dark"] .chat-bubble.assistant p {
-      color: #f1f3f5 !important;
+      color: var(--theme-text) !important;
     }
     .chat-input-wrapper {
       background-color: var(--theme-bg-card);
@@ -81,7 +81,15 @@
       outline: none;
     }
     [data-theme="dark"] .chat-input-custom {
-      background-color: #1e2225 !important;
+      background-color: var(--theme-bg-page) !important;
+    }
+    .chat-input-custom::placeholder {
+      color: var(--theme-text-muted) !important;
+      opacity: 0.7 !important;
+    }
+    [data-theme="dark"] .chat-input-custom::placeholder {
+      color: var(--theme-text-muted) !important;
+      opacity: 0.9 !important;
     }
     .btn-send-custom {
       background-color: var(--theme-accent) !important;
@@ -150,13 +158,14 @@
         <div>
           <h6 class="mb-0 fw-bold" style="font-size: 1.05rem; letter-spacing: 0.3px;">Mtracker AI</h6>
           <div class="d-flex align-items-center" style="opacity: 0.9; font-size: 0.75rem;">
-            <div style="width: 6px; height: 6px; border-radius: 50%; background-color: #28a745; margin-right: 5px;"></div>
+            <div style="width: 8px; height: 8px; border-radius: 50%; background-color: #4ade80; border: 1.5px solid rgba(255,255,255,0.85); margin-right: 5px;"></div>
             Online e Pronto
           </div>
         </div>
       </div>
-      
-      <button type="button" class="btn-close btn-close-white" data-close-chat aria-label="Fechar chat"></button>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn-close btn-close-white" data-close-chat aria-label="Fechar chat"></button>
+      </div>
     </div>
 
     <!-- Messages Area -->
@@ -166,8 +175,8 @@
           <div class="rounded-circle p-4 mb-3 d-inline-block" style="background-color: var(--theme-bg-card); box-shadow: 0 8px 20px var(--theme-shadow);">
             <i class="fa-solid fa-coins fa-2x" style="color: var(--theme-accent);"></i>
           </div>
-          <p class="fw-bold mb-1" style="color: var(--theme-text); font-size: 1.1rem;">Bem-vindo(a)!</p>
-          <p style="font-size: 0.85rem; max-width: 80%; margin: 0 auto;">Me faça qualquer pergunta sobre suas finanças ou dicas de poupança.</p>
+          <p class="fw-bold mb-1" style="color: var(--theme-text); font-size: 1.1rem;">Como posso ajudar?</p>
+          <p style="font-size: 0.85rem; max-width: 80%; margin: 0 auto;">Tire dúvidas sobre suas finanças, investimentos ou peça dicas de organização financeira.</p>
         </div>
       <% end %>
 
