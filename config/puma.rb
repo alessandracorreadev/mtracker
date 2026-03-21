@@ -42,3 +42,7 @@ pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Allow puma to be restarted by `bin/rails restart` command.
 plugin :tmp_restart
+
+# Run Solid Queue inside the Puma web process (no separate worker dyno needed)
+# This is the zero-cost solution for Heroku - it uses the same PostgreSQL database
+plugin :solid_queue
