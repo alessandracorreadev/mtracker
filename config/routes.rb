@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   get "settings/email", to: "settings#email", as: :settings_email
   patch "settings/email", to: "settings#update_email", as: :update_settings_email
   get "settings/support", to: "settings#support", as: :settings_support
+  resources :goals
   resources :expenses
   resources :incomes
   resources :investments do

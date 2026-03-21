@@ -1,0 +1,140 @@
+<div class="dashboard-page dashboard-page--goals">
+  <header class="dashboard-header d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+    <div>
+      <h1 class="dashboard-title text-success fw-bolder">Metas</h1>
+      <p class="dashboard-subtitle text-muted mb-0">Acompanhe seus objetivos financeiros</p>
+    </div>
+    <%= link_to new_goal_path, class: "btn btn-primary" do %>
+      <i class="fa-solid fa-plus me-1"></i> Nova meta
+    <% end %>
+  </header>
+
+  <% if @goals.any? %>
+    <% @goals.group_by { |g| [g.year, g.month] }.each do |(year, month), goals| %>
+      <div class="mb-4">
+        <h2 class="h6 text-muted text-uppercase fw-bold mb-3 ms-1">
+          <%= l(Date.new(year, month, 1), format: :month_year) %>
+        </h2>
+        <div class="d-flex flex-column gap-3">
+          <% goals.each do |goal| %>
+            <% achieved = goal.achieved? %>
+            <% percent = goal.progress_percent %>
+            <% is_expense_limit = goal.goal_type == "expense" %>
+            <div class="card border-0 rounded-4 shadow-sm goal-card <%= achieved ? 'goal-card--achieved' : '' %>">
+              <div class="card-body p-4">
+                <div class="d-flex align-items-start justify-content-between gap-3 mb-3">
+                  <div class="d-flex align-items-center gap-3">
+                    <div class="goal-icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0
+                      <%= case goal.goal_type
+                          when 'savings'    then 'bg-success bg-opacity-10 text-success'
+                          when 'expense'    then 'bg-danger bg-opacity-10 text-danger'
+                          when 'investment' then 'bg-primary bg-opacity-10 text-primary'
+                          end %>">
+                      <i class="fa-solid <%= case goal.goal_type
+                          when 'savings'    then 'fa-piggy-bank'
+                          when 'expense'    then 'fa-wallet'
+                          when 'investment' then 'fa-arrow-trend-up'
+                          end %>"></i>
+                    </div>
+                    <div>
+                      <span class="fw-bold d-block" style="color: var(--theme-text);"><%= goal.description %></span>
+                      <span class="small text-muted"><%= goal.type_label %></span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                    <% if achieved %>
+                      <span class="badge bg-success rounded-pill">
+                        <i class="fa-solid fa-check me-1"></i>Batida!
+                      </span>
+                    <% else %>
+                      <span class="badge bg-secondary bg-opacity-25 text-muted rounded-pill">Em andamento</span>
+                    <% end %>
+                    <div class="d-none d-md-flex gap-1">
+                      <%= link_to edit_goal_path(goal), class: "btn btn-sm btn-outline-secondary border-0 rounded-circle goal-action-btn", title: "Editar" do %>
+                        <i class="fa-solid fa-pen"></i>
+                      <% end %>
+                      <%= link_to goal_path(goal), class: "btn btn-sm btn-outline-danger border-0 rounded-circle goal-action-btn", title: "Excluir",
+                          data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta meta?" } do %>
+                        <i class="fa-solid fa-trash"></i>
+                      <% end %>
+                    </div>
+                    <div class="dropdown d-md-none">
+                      <button class="btn btn-sm btn-link text-muted px-2 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0 rounded-4" style="background-color: var(--theme-bg-card);">
+                        <li>
+                          <%= link_to edit_goal_path(goal), class: "dropdown-item d-flex align-items-center gap-2 py-2" do %>
+                            <i class="fa-solid fa-pen text-muted"></i> Editar
+                          <% end %>
+                        </li>
+                        <li>
+                          <%= link_to goal_path(goal), class: "dropdown-item d-flex align-items-center gap-2 py-2 text-danger",
+                              data: { turbo_method: :delete, turbo_confirm: "Tem certeza que deseja excluir esta meta?" } do %>
+                            <i class="fa-solid fa-trash"></i> Excluir
+                          <% end %>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="small text-muted">
+                    <% if is_expense_limit %>
+                      <%= number_to_currency(goal.current_value, unit: "R$ ", separator: ",", delimiter: ".") %> gastos
+                    <% else %>
+                      <%= number_to_currency(goal.current_value, unit: "R$ ", separator: ",", delimiter: ".") %> de
+                      <%= number_to_currency(goal.target_value, unit: "R$ ", separator: ",", delimiter: ".") %>
+                    <% end %>
+                  </span>
+                  <span class="small fw-bold <%= achieved ? 'text-success' : (is_expense_limit && percent >= 90 ? 'text-danger' : 'text-muted') %>">
+                    <% if is_expense_limit %>
+                      Limite: <%= number_to_currency(goal.target_value, unit: "R$ ", separator: ",", delimiter: ".") %>
+                    <% else %>
+                      <%= percent %>%
+                    <% end %>
+                  </span>
+                </div>
+
+                <div class="progress rounded-pill" style="height: 8px;">
+                  <div class="progress-bar rounded-pill
+                    <%= if achieved
+                          'bg-success'
+                        elsif is_expense_limit && percent >= 100
+                          'bg-danger'
+                        elsif is_expense_limit && percent >= 80
+                          'bg-warning'
+                        else
+                          case goal.goal_type
+                          when 'savings' then 'bg-success'
+                          when 'investment' then 'bg-primary'
+                          else 'bg-success'
+                          end
+                        end %>"
+                    role="progressbar"
+                    style="width: <%= percent %>%"
+                    aria-valuenow="<%= percent %>"
+                    aria-valuemin="0"
+                    aria-valuemax="100">
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-body text-center py-5">
+        <div class="text-muted mb-3">
+          <i class="fa-solid fa-bullseye fa-3x"></i>
+        </div>
+        <p class="text-muted mb-3">Nenhuma meta cadastrada ainda.</p>
+        <%= link_to "Criar primeira meta", new_goal_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>

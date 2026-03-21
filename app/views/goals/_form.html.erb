@@ -1,0 +1,20 @@
+<%= simple_form_for(@goal) do |f| %>
+  <%= f.input :description, label: "Descrição", input_html: { placeholder: "Ex: Economizar para viagem" } %>
+  <%= f.input :goal_type, as: :select, label: "Tipo de meta",
+      collection: Goal::TYPES.map { |k, v| [v, k] },
+      include_blank: "Selecione o tipo" %>
+  <%= f.input :target_value, label: "Valor alvo (R$)", input_html: { step: "0.01", min: "0" } %>
+  <div class="row">
+    <div class="col-sm-6">
+      <%= f.input :month, as: :select, label: "Mês",
+          collection: (1..12).map { |m| [l(Date.new(2000, m, 1), format: :month_year).split(' ').first, m] } %>
+    </div>
+    <div class="col-sm-6">
+      <%= f.input :year, label: "Ano", input_html: { min: 2020, max: 2100 } %>
+    </div>
+  </div>
+  <div class="d-flex flex-wrap gap-2 mt-3">
+    <%= f.button :submit, @goal.persisted? ? "Atualizar meta" : "Criar meta", class: "btn-primary" %>
+    <%= link_to "Cancelar", goals_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
