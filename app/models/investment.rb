@@ -1,6 +1,9 @@
 class Investment < ApplicationRecord
   belongs_to :user
 
+  # Invalidate the AI system prompt cache when financial data changes
+  after_commit -> { Rails.cache.delete("ai_context_#{user_id}") }
+
   def current_value
     return value unless interest_rate.present? && interest_rate > 0
 

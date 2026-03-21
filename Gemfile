@@ -27,6 +27,7 @@ gem "stimulus-rails"
 gem "jbuilder"
 
 gem "solid_cable"
+gem "solid_queue"
 
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
@@ -51,7 +52,7 @@ gem "font-awesome-sass", "~> 6.1"
 gem "simple_form", github: "heartcombo/simple_form"
 gem "sassc-rails"
 gem "devise"
-gem "ruby_llm", "~> 1.2.0"
+gem "ruby_llm", "~> 1.14"
 
 
 group :development, :test do
