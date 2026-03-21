@@ -11,6 +11,11 @@ class PagesController < ApplicationController
     @selected_year = [[@selected_year, 1].max, 9999].min
     @selected_month = filter_all ? "all" : (params[:month].present? ? params[:month].to_i : Date.current.month)
     @selected_month = [[@selected_month, 1].max, 12].min if @selected_month.is_a?(Integer)
+    
+    @chart_colors = [
+      "#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444", 
+      "#06b6d4", "#ec4899", "#8b5cf6", "#20c997", "#64748b"
+    ]
 
     if filter_all
       @expenses = current_user.expenses

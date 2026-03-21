@@ -25,34 +25,34 @@
     <div class="dashboard-layout-shell">
       <aside id="dashboard-sidebar" class="dashboard-sidebar" data-sidebar-target="sidebar" aria-label="Navegação">
         <div class="sidebar-brand">
-          <i class="fa-solid fa-chart-pie sidebar-brand-icon" aria-hidden="true"></i>
-          <span class="sidebar-brand-text">Money Tracker</span>
+          <i class="fa-solid fa-chart-pie sidebar-brand-icon text-success" aria-hidden="true"></i>
+          <span class="sidebar-brand-text fw-bold">MTracker</span>
         </div>
         <p class="sidebar-email text-muted small"><%= current_user&.email %></p>
 
         <nav class="sidebar-nav" aria-label="Menu principal">
           <% dash_active = current_page?(dashboard_path) %>
-          <%= link_to dashboard_path, { class: "sidebar-link #{'active' if dash_active}", title: "Dashboard" }.merge(dash_active ? { "aria-current" => "page" } : {}) do %>
-            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <%= link_to dashboard_path, { class: "sidebar-link stagger-reveal #{'active' if dash_active}", title: "Dashboard", "data-reveal-delay" => "1" }.merge(dash_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-gauge-high" aria-hidden="true"></i>
             <span class="sidebar-link-text">Dashboard</span>
           <% end %>
           <% exp_active = request.path.start_with?(expenses_path) %>
-          <%= link_to expenses_path, { class: "sidebar-link #{'active' if exp_active}", title: "Gastos" }.merge(exp_active ? { "aria-current" => "page" } : {}) do %>
+          <%= link_to expenses_path, { class: "sidebar-link stagger-reveal #{'active' if exp_active}", title: "Gastos", "data-reveal-delay" => "2" }.merge(exp_active ? { "aria-current" => "page" } : {}) do %>
             <i class="fa-solid fa-wallet" aria-hidden="true"></i>
             <span class="sidebar-link-text">Gastos</span>
           <% end %>
           <% inc_active = request.path.start_with?(incomes_path) %>
-          <%= link_to incomes_path, { class: "sidebar-link #{'active' if inc_active}", title: "Salário" }.merge(inc_active ? { "aria-current" => "page" } : {}) do %>
-            <i class="fa-solid fa-dollar-sign" aria-hidden="true"></i>
+          <%= link_to incomes_path, { class: "sidebar-link stagger-reveal #{'active' if inc_active}", title: "Salário", "data-reveal-delay" => "3" }.merge(inc_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-hand-holding-dollar" aria-hidden="true"></i>
             <span class="sidebar-link-text">Salário</span>
           <% end %>
           <% inv_active = request.path.start_with?(investments_path) && !request.path.include?("returns") %>
-          <%= link_to investments_path, { class: "sidebar-link #{'active' if inv_active}", title: "Investimentos" }.merge(inv_active ? { "aria-current" => "page" } : {}) do %>
-            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+          <%= link_to investments_path, { class: "sidebar-link stagger-reveal #{'active' if inv_active}", title: "Investimentos", "data-reveal-delay" => "4" }.merge(inv_active ? { "aria-current" => "page" } : {}) do %>
+            <i class="fa-solid fa-piggy-bank" aria-hidden="true"></i>
             <span class="sidebar-link-text">Investimentos</span>
           <% end %>
           <% ret_active = request.path.include?("returns") %>
-          <%= link_to returns_investments_path, { class: "sidebar-link #{'active' if ret_active}", title: "Rendimentos" }.merge(ret_active ? { "aria-current" => "page" } : {}) do %>
+          <%= link_to returns_investments_path, { class: "sidebar-link stagger-reveal #{'active' if ret_active}", title: "Rendimentos", "data-reveal-delay" => "5" }.merge(ret_active ? { "aria-current" => "page" } : {}) do %>
             <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
             <span class="sidebar-link-text">Meus Rendimentos</span>
           <% end %>

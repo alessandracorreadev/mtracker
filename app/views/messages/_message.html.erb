@@ -1,11 +1,12 @@
 <% if message.role == "user" %>
-  <div class="d-flex w-100 justify-content-end mb-2" id="<%= dom_id(message) %>">
+  <div class="d-flex flex-column align-items-end mb-3" id="<%= dom_id(message) %>">
     <div class="chat-bubble user">
       <%= simple_format(message.content, class: "mb-0") %>
     </div>
+    <span class="text-muted small mt-1" style="font-size: 0.75rem;"><%= l(message.created_at, format: "%H:%M") %></span>
   </div>
 <% elsif message.role == "assistant" %>
-  <div class="d-flex w-100 justify-content-start mb-2" id="<%= dom_id(message) %>">
+  <div class="d-flex flex-column align-items-start mb-3" id="<%= dom_id(message) %>">
     <div class="chat-bubble assistant">
       <% if message.content.present? %>
         <%= simple_format(message.content, class: "mb-0") %>
@@ -15,5 +16,8 @@
         </div>
       <% end %>
     </div>
+    <% if message.content.present? %>
+      <span class="text-muted small mt-1" style="font-size: 0.75rem;"><%= l(message.created_at, format: "%H:%M") %></span>
+    <% end %>
   </div>
 <% end %>

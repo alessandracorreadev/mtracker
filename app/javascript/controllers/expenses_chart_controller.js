@@ -15,20 +15,9 @@ export default class extends Controller {
 
     const labels = data.map((d) => d.name)
     const values = data.map((d) => Number(d.total))
-    const colors = [
-      "#0d6efd",
-      "#198754",
-      "#6f42c1",
-      "#fd7e14",
-      "#dc3545",
-      "#ffc107",
-      "#20c997",
-      "#0dcaf0",
-      "#6c757d",
-      "#e83e8c",
-      "#198754",
-      "#6f42c1",
-    ]
+    const colorsRaw = this.element.dataset.chartColors
+    const colors = colorsRaw ? JSON.parse(colorsRaw) : ["#05b355", "#0d1b2a"]
+
 
     this.chart = new Chart(canvas, {
       type: "doughnut",
@@ -38,15 +27,28 @@ export default class extends Controller {
           {
             data: values,
             backgroundColor: labels.map((_, i) => colors[i % colors.length]),
-            borderWidth: 0,
+            borderWidth: 2,
+            borderColor: "rgba(255,255,255,0.1)",
+            hoverOffset: 4
           },
         ],
       },
       options: {
         responsive: true,
         maintainAspectRatio: true,
+        cutout: "75%",
         plugins: {
           legend: { display: false },
+          tooltip: {
+            backgroundColor: "#212529",
+            titleFont: { size: 14, weight: "bold" },
+            bodyFont: { size: 13 },
+            padding: 12,
+            cornerRadius: 12,
+            displayColors: true,
+            borderColor: "rgba(255,255,255,0.1)",
+            borderWidth: 1
+          }
         },
       },
     })
