@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema[7.1].define(version: 2026_03_21_154116) do
-=======
-ActiveRecord::Schema[7.1].define(version: 2026_03_21_160100) do
->>>>>>> 2430ee44a1d67d0d09d75db0dd006cdf992342a6
+ActiveRecord::Schema[7.1].define(version: 2026_03_21_160116) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -220,13 +216,19 @@ ActiveRecord::Schema[7.1].define(version: 2026_03_21_160100) do
   end
 
 <<<<<<< HEAD
+<<<<<<< HEAD
   add_foreign_key "goals", "users"
 =======
+=======
+>>>>>>> 2430ee44a1d67d0d09d75db0dd006cdf992342a6
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+<<<<<<< HEAD
+>>>>>>> 2430ee44a1d67d0d09d75db0dd006cdf992342a6
+=======
 >>>>>>> 2430ee44a1d67d0d09d75db0dd006cdf992342a6
 end
