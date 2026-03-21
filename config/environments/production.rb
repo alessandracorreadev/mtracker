@@ -63,10 +63,11 @@ Rails.application.configure do
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # Use memory_store for caching (zero cost, works within the same Heroku dyno)
+  config.cache_store = :memory_store, { size: 16.megabytes }
 
-  # Use a real queuing backend for Active Job (and separate queues per environment).
-  config.active_job.queue_adapter = :sidekiq
+  # Use Solid Queue (uses PostgreSQL, same db, no extra Heroku dyno needed)
+  # config.active_job.queue_adapter already set in application.rb
   # config.active_job.queue_name_prefix = "mtracker_production"
 
   config.action_mailer.perform_caching = false

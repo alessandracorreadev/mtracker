@@ -23,6 +23,11 @@ Rails.application.routes.draw do
   end
   resources :chats, only: [:index, :show, :create, :destroy] do
     resources :messages, only: [:create]
+    namespace :wizard do
+      resources :expenses, only: [:new, :create, :destroy]
+      resources :incomes, only: [:new, :create, :destroy]
+      resources :investments, only: [:new, :create, :destroy]
+    end
   end
   # Defines the root path route ("/")
   # root "posts#index"
