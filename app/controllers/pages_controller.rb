@@ -62,11 +62,26 @@ class PagesController < ApplicationController
       .sum(:value)
       .map { |name, total| { name: name, total: total } }
 
+    @incomes_by_category = @incomes
+      .where.not(income_type: [nil, ""])
+      .group(:income_type)
+      .sum(:value)
+      .map { |name, total| { name: name, total: total } }
+
+    # Alocação do período (apenas os aportes do mês selecionado)
     @investments_by_category = @investments
       .where.not(investment_type: [nil, ""])
       .group(:investment_type)
       .sum(:value)
       .map { |name, total| { name: name, total: total } }
+
+    # --- Indicadores de Metas ---
+
+    if filter_all
+      @period_goals = current_user.goals.order(year: :desc, month: :desc).limit(5)
+    else
+      @period_goals = current_user.goals.where(month: @selected_month, year: @selected_year)
+    end
 
     first_year = [current_user.expenses.minimum(:date)&.year, current_user.incomes.minimum(:date)&.year, current_user.investments.minimum(:date)&.year].compact.min || Date.current.year
     @years = (first_year..Date.current.year).to_a.reverse

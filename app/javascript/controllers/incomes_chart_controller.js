@@ -5,7 +5,7 @@ Chart.register(...registerables)
 
 export default class extends Controller {
   connect() {
-    const canvas = this.element.querySelector("#expenses-chart")
+    const canvas = this.element.querySelector("#incomes-chart")
     if (!canvas) return
 
     const raw = this.element.dataset.chartData
@@ -17,7 +17,6 @@ export default class extends Controller {
     const values = data.map((d) => Number(d.total))
     const colorsRaw = this.element.dataset.chartColors
     const colors = colorsRaw ? JSON.parse(colorsRaw) : ["#05b355", "#0d1b2a"]
-
     const percentageLabelsPlugin = {
       id: "percentageLabels",
       afterDatasetsDraw(chart, args, options) {

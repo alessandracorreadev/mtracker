@@ -47,6 +47,8 @@
     </div>
   </section>
 
+
+
   <section class="dashboard-cards row g-3 mb-4">
     <div class="col-12 col-lg-4">
       <div class="card border-0 rounded-4 shadow-sm h-100">
@@ -69,7 +71,9 @@
           </div>
           <div>
             <h6 class="card-subtitle text-muted mb-1 small text-uppercase fw-bold">Receitas</h6>
-            <p class="card-value mb-0 h4 fw-bold"><%= number_to_currency(@total_incomes, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+            <div class="d-flex align-items-baseline gap-2">
+              <p class="card-value mb-0 h4 fw-bold"><%= number_to_currency(@total_incomes, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+            </div>
           </div>
         </div>
       </div>
@@ -81,13 +85,8 @@
             <i class="fa-solid fa-piggy-bank fs-4"></i>
           </div>
           <div class="w-100">
-            <h6 class="card-subtitle text-muted mb-1 small text-uppercase fw-bold">Patrimônio Total</h6>
-            <p class="card-value mb-0 h4 fw-bold"><%= number_to_currency(@total_investments_current_value, unit: "R$ ", separator: ",", delimiter: ".") %></p>
-            <% if @total_investments_cost > 0 %>
-              <div class="text-primary smaller mt-1 fw-medium" style="font-size: 0.7rem;">
-                +<%= number_to_currency(@total_investments_cost, unit: "R$") %> aporte
-              </div>
-            <% end %>
+            <h6 class="card-subtitle text-muted mb-1 small text-uppercase fw-bold">Alocações Diversas</h6>
+            <p class="card-value mb-0 h4 fw-bold text-info"><%= number_to_currency(@total_investments_cost, unit: "R$ ", separator: ",", delimiter: ".") %></p>
           </div>
         </div>
       </div>
@@ -95,25 +94,22 @@
   </section>
 
   <section class="row g-4 mb-4">
-    <div class="col-12 col-lg-6">
+    <div class="col-12 col-lg-4">
       <div class="card border-0 rounded-4 shadow-sm p-4 h-100" 
            data-controller="expenses-chart" 
            data-chart-data="<%= h(@expenses_by_category.to_json) %>"
            data-chart-colors="<%= @chart_colors.to_json %>">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="h5 fw-bold mb-0">Distribuição de Despesas</h2>
-        </div>
-        <div class="row align-items-center">
-          <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
-            <div class="chart-container" style="position: relative;">
-              <canvas id="expenses-chart"></canvas>
-              <div class="chart-center-label position-absolute top-50 start-50 translate-middle text-center w-100" style="pointer-events: none;">
-                <span class="d-block small text-muted text-uppercase fw-bold" style="font-size: 0.65rem; letter-spacing: 0.5px;">Gasto Total</span>
-                <span class="d-block h6 fw-bolder mb-0"><%= number_to_currency(@total_expenses, unit: "", precision: 0) %></span>
-              </div>
-            </div>
+          <div class="text-end">
+            <span class="small fw-bold text-muted">Total: <span class="text-highlight-theme"><%= number_to_currency(@total_expenses, unit: "R$ ", separator: ",", delimiter: ".", precision: 0) %></span></span>
           </div>
-          <div class="col-md-6 col-lg-7">
+        </div>
+        <div class="d-flex flex-column align-items-center h-100">
+          <div class="chart-container mb-4" style="position: relative; width: 100%; max-width: 250px;">
+            <canvas id="expenses-chart"></canvas>
+          </div>
+          <div class="w-100 px-2 mt-auto">
             <% if @expenses_by_category.present? %>
               <ul class="expenses-legend list-unstyled mb-0">
                 <% @expenses_by_category.each_with_index do |item, idx| %>
@@ -134,25 +130,61 @@
         </div>
       </div>
     </div>
-    <div class="col-12 col-lg-6">
+
+    <!-- Novo: Distribuição de Receitas -->
+    <div class="col-12 col-lg-4">
+      <div class="card border-0 rounded-4 shadow-sm p-4 h-100" 
+           data-controller="incomes-chart" 
+           data-chart-data="<%= h(@incomes_by_category.to_json) %>"
+           data-chart-colors="<%= @chart_colors.to_json %>">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="h5 fw-bold mb-0">Distribuição de Receitas</h2>
+          <div class="text-end">
+            <span class="small fw-bold text-muted">Total: <span class="text-highlight-theme"><%= number_to_currency(@total_incomes, unit: "R$ ", separator: ",", delimiter: ".", precision: 0) %></span></span>
+          </div>
+        </div>
+        <div class="d-flex flex-column align-items-center h-100">
+          <div class="chart-container mb-4" style="position: relative; width: 100%; max-width: 250px;">
+            <canvas id="incomes-chart"></canvas>
+          </div>
+          <div class="w-100 px-2 mt-auto">
+            <% if @incomes_by_category.present? %>
+              <ul class="expenses-legend list-unstyled mb-0 w-100">
+                <% @incomes_by_category.each_with_index do |item, idx| %>
+                  <li class="d-flex align-items-center mb-2">
+                    <span class="legend-dot rounded-circle me-2" style="background-color: <%= @chart_colors[idx % @chart_colors.size] %>; width: 10px; height: 10px; flex-shrink: 0;"></span>
+                    <span class="small text-muted flex-grow-1 fw-medium text-truncate"><%= item[:name] %></span>
+                    <span class="small fw-bold ms-2 text-highlight-theme"><%= number_to_currency(item[:total], unit: "R$ ", precision: 0) %></span>
+                  </li>
+                <% end %>
+              </ul>
+            <% else %>
+              <div class="text-center py-2">
+                <i class="fa-solid fa-ghost text-light fa-2x mb-2"></i>
+                <p class="text-muted small mb-0">Nenhuma receita registrada.</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
       <div class="card border-0 rounded-4 shadow-sm p-4 h-100" 
            data-controller="investments-chart" 
            data-chart-data="<%= h(@investments_by_category.to_json) %>"
            data-chart-colors="<%= @chart_colors.to_json %>">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="h5 fw-bold mb-0">Alocação de Ativos</h2>
-        </div>
-        <div class="row align-items-center">
-          <div class="col-md-6 col-lg-5 mb-3 mb-md-0 d-flex justify-content-center">
-            <div class="chart-container" style="position: relative;">
-              <canvas id="investments-chart"></canvas>
-              <div class="chart-center-label position-absolute top-50 start-50 translate-middle text-center w-100" style="pointer-events: none;">
-                <span class="d-block small text-muted text-uppercase fw-bold" style="font-size: 0.55rem; letter-spacing: 0.5px;">Patrimônio Atual</span>
-                <span class="d-block h6 fw-bolder mb-0"><%= number_to_currency(@total_investments_current_value, unit: "", precision: 0) %></span>
-              </div>
-            </div>
+          <div class="text-end">
+            <span class="small fw-bold text-muted">Total: <span class="text-highlight-theme"><%= number_to_currency(@total_investments_cost, unit: "R$ ", separator: ",", delimiter: ".", precision: 0) %></span></span>
           </div>
-          <div class="col-md-6 col-lg-7">
+        </div>
+        <div class="d-flex flex-column align-items-center h-100">
+          <div class="chart-container mb-4" style="position: relative; width: 100%; max-width: 250px;">
+            <canvas id="investments-chart"></canvas>
+          </div>
+          <div class="w-100 px-2 mt-auto">
             <% if @investments_by_category.present? %>
               <ul class="expenses-legend list-unstyled mb-0">
                 <% @investments_by_category.each_with_index do |item, idx| %>
@@ -174,4 +206,106 @@
       </div>
     </div>
   </section>
+
+  <!-- Metas do Período -->
+  <section class="mb-5">
+    <div class="card border-0 rounded-4 shadow-sm p-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="h5 fw-bold mb-0">Metas do Período</h2>
+        <%= link_to new_goal_path(month: @selected_month, year: @selected_year), class: "btn btn-sm btn-outline-primary rounded-pill px-3" do %>
+          <i class="fa-solid fa-plus me-1"></i> Nova Meta
+        <% end %>
+      </div>
+
+      <% if @period_goals.any? %>
+        <div class="row g-3">
+          <% @period_goals.each do |goal| %>
+            <div class="col-12 col-md-6 col-xl-4">
+              <div class="card border rounded-4 shadow-none p-3 h-100" style="background-color: var(--theme-bg-sidebar-alt);">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                  <div class="fw-bold text-highlight-theme text-truncate" title="<%= goal.description %>">
+                    <%= goal.description %>
+                  </div>
+                  <% 
+                    is_expense = goal.goal_type == 'expense'
+                    is_over_budget = is_expense && goal.current_value > goal.target_value
+                    
+                    status_badge = "bg-secondary bg-opacity-10 text-muted"
+                    status_text = goal.type_label
+                    
+                    if is_over_budget
+                      status_badge = "bg-danger bg-opacity-10 text-danger border-danger"
+                      status_text = '<i class="fa-solid fa-triangle-exclamation me-1"></i>Excedida'.html_safe
+                    elsif goal.achieved? && !is_expense
+                      status_badge = "bg-success bg-opacity-10 text-success"
+                      status_text = '<i class="fa-solid fa-check me-1"></i>Atingida'.html_safe
+                    elsif is_expense && goal.target_value > 0
+                      # If it is an expense but not over budget
+                      pct = (goal.current_value / goal.target_value)
+                      if pct >= 1.0
+                         status_badge = "bg-danger bg-opacity-10 text-danger border-danger"
+                         status_text = '<i class="fa-solid fa-triangle-exclamation me-1"></i>Excedida'.html_safe
+                      elsif pct > 0.8
+                         status_badge = "bg-warning bg-opacity-10 text-warning-emphasis"
+                         status_text = '<i class="fa-solid fa-circle-exclamation me-1"></i>Atenção'.html_safe
+                      else
+                         status_badge = "bg-success bg-opacity-10 text-success"
+                         status_text = '<i class="fa-solid fa-shield-check me-1"></i>No Limite'.html_safe
+                      end
+                    end
+                    
+                    progress_color = "bg-primary"
+                    text_color = "text-primary"
+                    
+                    if is_over_budget || (is_expense && goal.current_value >= goal.target_value)
+                      progress_color = "bg-danger"
+                      text_color = "text-danger"
+                    elsif is_expense && goal.target_value > 0 && (goal.current_value / goal.target_value) > 0.8
+                      progress_color = "bg-warning"
+                      text_color = "text-warning"
+                    elsif goal.achieved? && !is_expense
+                      progress_color = "bg-success"
+                      text_color = "text-success"
+                    end
+                  %>
+                  <span class="badge <%= status_badge %> rounded-pill ms-2 flex-shrink-0"><%= status_text %></span>
+                </div>
+                
+                <div class="d-flex justify-content-between small mb-1 mt-3">
+                  <span class="text-muted">Progresso</span>
+                  <span class="fw-bold <%= text_color %>"><%= goal.progress_percent %>%</span>
+                </div>
+                
+                <div class="progress rounded-pill bg-body-secondary mb-2" style="height: 8px;">
+                  <div class="progress-bar <%= progress_color %>" role="progressbar" style="width: <%= [goal.progress_percent, 100].min %>%;" aria-valuenow="<%= goal.progress_percent %>" aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-auto pt-2 small">
+                  <div>
+                    <span class="text-muted d-block" style="font-size: 0.65rem; text-transform: uppercase;">Atual</span>
+                    <span class="fw-bold"><%= number_to_currency(goal.current_value, unit: "R$ ") %></span>
+                  </div>
+                  <div class="text-end">
+                    <span class="text-muted d-block" style="font-size: 0.65rem; text-transform: uppercase;">Meta</span>
+                    <span class="fw-bold text-muted"><%= number_to_currency(goal.target_value, unit: "R$ ") %></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-4">
+          <div class="dashboard-card-icon rounded-circle bg-secondary bg-opacity-10 text-muted d-inline-flex align-items-center justify-content-center mb-3" style="width: 64px; height: 64px;">
+            <i class="fa-solid fa-bullseye fs-3"></i>
+          </div>
+          <p class="text-muted mb-3">Nenhuma meta definida para este período.</p>
+          <%= link_to new_goal_path(month: @selected_month, year: @selected_year), class: "btn btn-primary rounded-pill px-4" do %>
+            Definir Primeira Meta
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </section>
 </div>
+

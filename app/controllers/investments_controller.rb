@@ -17,9 +17,23 @@ class InvestmentsController < ApplicationController
     @total_current_value = @investments.map(&:current_value).sum
     @total_yield = @total_current_value - @total_invested
     
+    # Portfolio KPIs
+    total_incomes = current_user.incomes.sum(:value) || 0
+    total_expenses = current_user.expenses.sum(:value) || 0
+    @savings_rate = total_incomes > 0 ? (((total_incomes - total_expenses) / total_incomes) * 100).round(1) : 0
+    @portfolio_yield_pct = @total_invested > 0 ? ((@total_yield / @total_invested) * 100).round(2) : 0
+
+    
     # Estimativa de rendimento mensal (próximo mês)
+    # Usa taxa mensal equivalente para juros compostos: (1 + i_anual)^(1/12) - 1
     @monthly_estimated_yield = @investments.sum do |inv|
-      inv.interest_rate.present? ? (inv.current_value * (inv.interest_rate / 100.0 / 12.0)) : 0
+      if inv.interest_rate.present? && inv.interest_rate > 0
+        annual_rate = inv.interest_rate / 100.0
+        monthly_rate = (1 + annual_rate)**(1.0 / 12) - 1
+        inv.current_value * monthly_rate
+      else
+        0
+      end
     end
   end
 

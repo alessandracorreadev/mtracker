@@ -18,9 +18,13 @@ class Goal < ApplicationRecord
       user.incomes.where(month_year_scope).sum(:value) -
         user.expenses.where(month_year_scope).sum(:value)
     when "expense"
-      user.expenses.where(month_year_scope).sum(:value)
+      scope = user.expenses.where(month_year_scope)
+      scope = scope.where("expense_type ILIKE ?", category) if category.present? && category.downcase != "total"
+      scope.sum(:value)
     when "investment"
-      user.investments.where(month_year_scope).sum(:value)
+      scope = user.investments.where(month_year_scope)
+      scope = scope.where("investment_type ILIKE ?", category) if category.present? && category.downcase != "total"
+      scope.sum(:value)
     end
   end
 
@@ -34,15 +38,15 @@ class Goal < ApplicationRecord
   end
 
   def progress_percent
-    return 100 if achieved?
     return 0 if target_value.zero?
 
     case goal_type
     when "savings", "investment"
+      return 100 if achieved?
       [(current_value / target_value * 100).round, 100].min
     when "expense"
-      # Para limite de gastos, progresso é quanto do limite já foi usado
-      [(current_value / target_value * 100).round, 100].min
+      # Para limite de gastos, mostra o percentual consumido sem travar no "achieved"
+      (current_value / target_value * 100).round
     end
   end
 
