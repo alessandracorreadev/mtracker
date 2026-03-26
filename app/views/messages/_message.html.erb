@@ -6,43 +6,19 @@
     <span class="text-muted small mt-1" style="font-size: 0.75rem;"><%= l(message.created_at, format: "%H:%M") %></span>
   </div>
 <% elsif message.role == "assistant" %>
-  <% 
-    content_str = message.content.to_s
-    is_wizard = content_str.include?("[WIZARD:TRANSACTION_SELECTOR]")
-    
-    # If the LLM is currently streaming the exact tag and hasn't finished, hide the text and show typing indicator
-    is_wizard_streaming = !is_wizard && "[WIZARD:TRANSACTION_SELECTOR]".start_with?(content_str.strip.gsub("`", "")) && content_str.present?
-    
-    clean_content = content_str.gsub("[WIZARD:TRANSACTION_SELECTOR]", "").gsub("`", "").strip
-    # If all that's left is a lone period or spaces, clear it
-    clean_content = "" if clean_content.match?(/^[.\s]*$/)
-  %>
-
   <div class="d-flex flex-column align-items-start mb-3" id="<%= dom_id(message) %>" style="width: 100%;">
-    <% if is_wizard_streaming %>
+    <% clean_content = message.content.to_s.gsub(/\[TRANSACTION:.*?\]/m, '').gsub(/\[GOAL:.*?\]/m, '').strip %>
+    <% if clean_content.blank? %>
       <div class="chat-bubble assistant">
         <div class="typing-indicator">
           <span></span><span></span><span></span>
         </div>
       </div>
-    <% elsif clean_content.present? || (!is_wizard && content_str.present?) %>
+    <% else %>
       <div class="chat-bubble assistant">
-        <%= simple_format(clean_content.presence || content_str, class: "mb-0") %>
+        <%= simple_format(clean_content, class: "mb-0") %>
       </div>
       <span class="text-muted small mt-1" style="font-size: 0.75rem;"><%= l(message.created_at, format: "%H:%M") %></span>
-    <% elsif content_str.blank? && !is_wizard %>
-      <div class="chat-bubble assistant">
-        <div class="typing-indicator">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-    <% end %>
-
-    <% if is_wizard %>
-      <%= render "messages/transaction_selector", message: message %>
-      <% if clean_content.blank? %>
-        <span class="text-muted small mt-1" style="font-size: 0.75rem;"><%= l(message.created_at, format: "%H:%M") %></span>
-      <% end %>
     <% end %>
   </div>
 <% end %>

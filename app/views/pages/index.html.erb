@@ -21,26 +21,11 @@
     <div class="card border-0 rounded-4 shadow-sm position-relative overflow-hidden hero-saldo-container">
       <div class="card-body p-4 p-md-5">
         <div class="row align-items-center">
-          <div class="col-md-7">
+          <div class="col-12">
             <h6 class="text-uppercase text-muted small fw-bold mb-2" style="letter-spacing: 1px;">Saldo Líquido no Período</h6>
             <h2 class="display-5 fw-bolder mb-1 <%= @balance >= 0 ? 'text-success' : 'text-danger' %>">
               <%= number_to_currency(@balance, unit: "R$ ", separator: ",", delimiter: ".") %>
             </h2>
-            <div class="small">
-              <span class="text-muted">Desempenho Real:</span>
-              <span class="fw-bold <%= @net_growth >= 0 ? 'text-success' : 'text-danger' %> ms-1">
-                <%= number_to_currency(@net_growth, unit: "R$ ") %>
-              </span>
-            </div>
-          </div>
-          <div class="col-md-5 text-md-end mt-4 mt-md-0">
-            <div class="p-3 rounded-4 <%= @total_yield >= 0 ? 'bg-success bg-opacity-10' : 'bg-danger bg-opacity-10' %> d-inline-block">
-              <div class="small text-muted text-uppercase fw-bold mb-1" style="font-size: 0.7rem;">Rendimento da Carteira</div>
-              <div class="<%= @total_yield >= 0 ? 'text-success' : 'text-danger' %> fw-bold h4 mb-0">
-                <i class="fa-solid fa-chart-line me-1"></i>
-                +<%= number_to_currency(@total_yield, unit: "R$ ") %>
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -86,7 +71,7 @@
           </div>
           <div class="w-100">
             <h6 class="card-subtitle text-muted mb-1 small text-uppercase fw-bold">Alocações Diversas</h6>
-            <p class="card-value mb-0 h4 fw-bold text-info"><%= number_to_currency(@total_investments_cost, unit: "R$ ", separator: ",", delimiter: ".") %></p>
+            <p class="card-value mb-0 h4 fw-bold text-info"><%= number_to_currency(@total_investments, unit: "R$ ", separator: ",", delimiter: ".") %></p>
           </div>
         </div>
       </div>
@@ -177,7 +162,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="h5 fw-bold mb-0">Alocação de Ativos</h2>
           <div class="text-end">
-            <span class="small fw-bold text-muted">Total: <span class="text-highlight-theme"><%= number_to_currency(@total_investments_cost, unit: "R$ ", separator: ",", delimiter: ".", precision: 0) %></span></span>
+            <span class="small fw-bold text-muted">Total: <span class="text-highlight-theme"><%= number_to_currency(@total_investments, unit: "R$ ", separator: ",", delimiter: ".", precision: 0) %></span></span>
           </div>
         </div>
         <div class="d-flex flex-column align-items-center h-100">
