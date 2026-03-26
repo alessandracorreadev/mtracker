@@ -19,15 +19,6 @@ class CreateAiResponseJob < ApplicationJob
 
     llm_chat = RubyLLM.chat.with_instructions(system_instructions)
 
-    # Register tools so the AI can fetch detailed financial data on demand
-    llm_chat.with_tools(
-      GetMonthlyExpensesTool.new(@user),
-      GetMonthlyIncomesTool.new(@user),
-      GetMonthlySummaryTool.new(@user),
-      GetInvestmentsTool.new(@user),
-      ShowTransactionSelectorTool.new
-    )
-
     # Build context window by character budget, not message count
     context_messages = build_context_by_volume(@chat, @assistant_message.id)
     context_messages.each do |msg|
@@ -167,6 +158,7 @@ class CreateAiResponseJob < ApplicationJob
       when 'investment' then user.investments.create!(description: data['description'], value: data['value'].to_f, date: Date.parse(data['date']), investment_type: data['investment_type'] || data['category'], interest_rate: data['interest_rate'])
       end
       @transaction_saved = true
+      Turbo::StreamsChannel.broadcast_refresh_to(@user)
     rescue => e
       Rails.logger.error "AI Transaction Parse Error: #{e.message}"
     end
