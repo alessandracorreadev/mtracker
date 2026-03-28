@@ -5,7 +5,7 @@
       include_blank: "Selecione o tipo" %>
   <%= f.input :target_value, label: "Valor alvo (R$)", input_html: { step: "0.01", min: "0" } %>
   
-  <div id="goal-category-wrapper" style="<%= @goal.goal_type == 'savings' ? 'display: none;' : '' %>">
+  <div id="goal-category-wrapper" class="<%= 'd-none' if @goal.goal_type == 'savings' %>">
     <datalist id="expense-categories-datalist">
       <option value="Total">
       <% current_user.expenses.select(:expense_type).distinct.pluck(:expense_type).compact.reject(&:blank?).uniq.sort.each do |cat| %>
@@ -18,7 +18,7 @@
         <option value="<%= cat %>">
       <% end %>
     </datalist>
-    <%= f.input :category, label: "Categoria alvo (Opcional)", hint: "Deixe 'Total' para meta global ou digite uma Categoria.", hint_html: { style: "color: var(--theme-text-muted) !important; font-size: 0.8rem; opacity: 0.85;" }, input_html: { list: @goal.goal_type == 'investment' ? "investment-categories-datalist" : "expense-categories-datalist", placeholder: "Total" } %>
+    <%= f.input :category, label: "Categoria alvo (Opcional)", hint: "Deixe 'Total' para meta global ou digite uma Categoria.", hint_html: { class: "goal-form-hint" }, input_html: { list: @goal.goal_type == 'investment' ? "investment-categories-datalist" : "expense-categories-datalist", placeholder: "Total" } %>
   </div>
 
   <div class="row">
