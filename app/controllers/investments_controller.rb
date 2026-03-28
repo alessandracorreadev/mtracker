@@ -10,20 +10,22 @@ class InvestmentsController < ApplicationController
   end
 
   def returns
+    redirect_back(fallback_location:dashboard_path) unless Flipper.enabled?(:returns_investments)
+
     @investments = current_user.investments.order(date: :desc)
     @investments_by_type = @investments.group_by(&:investment_type)
-    
+
     @total_invested = @investments.sum(:value)
     @total_current_value = @investments.map(&:current_value).sum
     @total_yield = @total_current_value - @total_invested
-    
+
     # Portfolio KPIs
     total_incomes = current_user.incomes.sum(:value) || 0
     total_expenses = current_user.expenses.sum(:value) || 0
     @savings_rate = total_incomes > 0 ? (((total_incomes - total_expenses) / total_incomes) * 100).round(1) : 0
     @portfolio_yield_pct = @total_invested > 0 ? ((@total_yield / @total_invested) * 100).round(2) : 0
 
-    
+
     # Estimativa de rendimento mensal (próximo mês)
     # Usa taxa mensal equivalente para juros compostos: (1 + i_anual)^(1/12) - 1
     @monthly_estimated_yield = @investments.sum do |inv|
