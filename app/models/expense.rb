@@ -1,4 +1,6 @@
 class Expense < ApplicationRecord
+  CATEGORIES = ["Moradia", "Alimentação", "Transporte", "Lazer", "Saúde", "Educação", "Pessoal", "Pets", "Outros"].freeze
+
   belongs_to :user
 
   # Invalidate the AI system prompt cache when financial data changes

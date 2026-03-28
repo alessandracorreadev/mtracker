@@ -9,7 +9,7 @@
   <div data-goal-form-target="categoryWrapper" class="<%= 'd-none' if @goal.goal_type == 'savings' %>">
     <datalist id="expense-categories-datalist">
       <option value="Total">
-      <% current_user.expenses.select(:expense_type).distinct.pluck(:expense_type).compact.reject(&:blank?).uniq.sort.each do |cat| %>
+      <% Expense::CATEGORIES.each do |cat| %>
         <option value="<%= cat %>">
       <% end %>
     </datalist>
