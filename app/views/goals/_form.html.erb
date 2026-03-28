@@ -1,11 +1,12 @@
-<%= simple_form_for(@goal) do |f| %>
+<%= simple_form_for(@goal, html: { data: { controller: "goal-form" } }) do |f| %>
   <%= f.input :description, label: "Descrição", input_html: { placeholder: "Ex: Economizar para viagem" } %>
   <%= f.input :goal_type, as: :select, label: "Tipo de meta",
       collection: Goal::TYPES.map { |k, v| [v, k] },
-      include_blank: "Selecione o tipo" %>
+      include_blank: "Selecione o tipo",
+      input_html: { data: { goal_form_target: "typeSelect", action: "change->goal-form#onTypeChange" } } %>
   <%= f.input :target_value, label: "Valor alvo (R$)", input_html: { step: "0.01", min: "0" } %>
-  
-  <div id="goal-category-wrapper" style="<%= @goal.goal_type == 'savings' ? 'display: none;' : '' %>">
+
+  <div data-goal-form-target="categoryWrapper" class="<%= 'd-none' if @goal.goal_type == 'savings' %>">
     <datalist id="expense-categories-datalist">
       <option value="Total">
       <% Expense::CATEGORIES.each do |cat| %>
@@ -18,7 +19,7 @@
         <option value="<%= cat %>">
       <% end %>
     </datalist>
-    <%= f.input :category, label: "Categoria alvo (Opcional)", hint: "Deixe 'Total' para meta global ou digite uma Categoria.", hint_html: { style: "color: var(--theme-text-muted) !important; font-size: 0.8rem; opacity: 0.85;" }, input_html: { list: @goal.goal_type == 'investment' ? "investment-categories-datalist" : "expense-categories-datalist", placeholder: "Total" } %>
+    <%= f.input :category, label: "Categoria alvo (Opcional)", hint: "Deixe 'Total' para meta global ou digite uma Categoria.", hint_html: { class: "goal-form-hint" }, input_html: { list: @goal.goal_type == 'investment' ? "investment-categories-datalist" : "expense-categories-datalist", placeholder: "Total", data: { goal_form_target: "categoryInput" } } %>
   </div>
 
   <div class="row">
@@ -35,41 +36,3 @@
     <%= link_to "Cancelar", goals_path, class: "btn btn-outline-secondary" %>
   </div>
 <% end %>
-
-<script>
-  document.addEventListener('turbo:load', function() {
-    setupGoalTypeToggle();
-  });
-  
-  setupGoalTypeToggle();
-
-  function setupGoalTypeToggle() {
-    const typeSelect = document.getElementById('goal_goal_type');
-    const categoryWrapper = document.getElementById('goal-category-wrapper');
-    const categoryInput = document.getElementById('goal_category');
-    
-    function applyCategoryLogic(val) {
-      if (val === 'savings') {
-        categoryWrapper.style.display = 'none';
-        if (categoryInput) categoryInput.value = '';
-      } else {
-        categoryWrapper.style.display = 'block';
-        if (categoryInput) {
-          if (val === 'expense') {
-            categoryInput.setAttribute('list', 'expense-categories-datalist');
-          } else if (val === 'investment') {
-            categoryInput.setAttribute('list', 'investment-categories-datalist');
-          }
-        }
-      }
-    }
-
-    if (typeSelect && categoryWrapper) {
-      typeSelect.addEventListener('change', function(e) {
-        applyCategoryLogic(e.target.value);
-      });
-      // trigger on load
-      applyCategoryLogic(typeSelect.value);
-    }
-  }
-</script>
