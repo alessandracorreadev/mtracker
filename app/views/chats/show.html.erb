@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "chat_widget_frame" do %>
-  <div class="d-flex flex-column chat-wrapper">
+  <div class="d-flex flex-column chat-wrapper" data-controller="chat">
     <%= turbo_stream_from @chat %>
 
     <!-- Premium Header -->
@@ -22,7 +22,7 @@
     </div>
 
     <!-- Messages Area -->
-    <div class="chat-container flex-grow-1 p-3 premium-scroll chat-messages-area" id="messages-container">
+    <div class="chat-container flex-grow-1 p-3 premium-scroll chat-messages-area" id="messages-container" data-chat-target="container">
       <% if @chat.messages.none? %>
         <div class="text-center mt-auto mb-auto" style="color: var(--theme-text-muted);">
           <div class="rounded-circle p-4 mb-3 d-inline-block chat-empty-icon">
@@ -33,7 +33,7 @@
         </div>
       <% end %>
 
-      <div id="messages">
+      <div id="messages" data-chat-target="messages">
         <%= render "messages/messages", messages: @chat.messages.order(:created_at) %>
       </div>
     </div>
@@ -45,74 +45,4 @@
       </div>
     </div>
   </div>
-
-  <script>
-    (function() {
-      var container = document.getElementById("messages-container");
-
-      function scrollToBottom() {
-        if(container) {
-          container.scrollTop = container.scrollHeight;
-        }
-      }
-
-      // Initial scroll
-      scrollToBottom();
-
-      var input = document.getElementById("chat_input");
-      var form = document.getElementById("chat_form");
-      var submitBtn = document.getElementById("chat_submit_btn");
-
-      if(input && form) {
-        var new_element = input.cloneNode(true);
-        input.parentNode.replaceChild(new_element, input);
-
-        function prepareSubmit() {
-          if(submitBtn) {
-            submitBtn.innerHTML = "<i class='fa-solid fa-circle-notch fa-spin'></i>";
-            submitBtn.style.pointerEvents = "none";
-          }
-        }
-
-        new_element.addEventListener("keydown", function(e) {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            if(new_element.value.trim() !== '') {
-              prepareSubmit();
-              form.requestSubmit();
-            }
-          }
-        });
-
-        form.addEventListener("submit", function(e) {
-          if(new_element.value.trim() !== '') {
-            prepareSubmit();
-          } else {
-            e.preventDefault();
-            new_element.focus();
-          }
-        });
-
-        new_element.focus();
-      }
-
-      // Simple observer to scroll when new messages (chunks) arrive via Turbo Streams
-      var messagesDiv = document.getElementById("messages");
-      if(messagesDiv) {
-        var observer = new MutationObserver(function() {
-          scrollToBottom();
-
-          // Re-enable send button if we detect the assistant message is no longer a placeholder
-          var lastMsg = messagesDiv.lastElementChild;
-          if (lastMsg && !lastMsg.querySelector('.typing-indicator')) {
-             if(submitBtn) {
-                submitBtn.innerHTML = "<i class='fa-solid fa-paper-plane' style='margin-left:-2px'></i>";
-                submitBtn.style.pointerEvents = "auto";
-             }
-          }
-        });
-        observer.observe(messagesDiv, { childList: true, subtree: true });
-      }
-    })();
-  </script>
 <% end %>
