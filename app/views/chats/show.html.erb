@@ -1,165 +1,17 @@
 <%= turbo_frame_tag "chat_widget_frame" do %>
-  <style>
-    /* Premium Chat Styles - Scope strictly to chat widget to avoid global pollution */
-    .premium-chat-header {
-      background: linear-gradient(135deg, var(--theme-accent) 0%, var(--theme-accent-dark, #038f42) 100%);
-      color: white;
-      border-bottom: none;
-      padding: 1.2rem;
-      position: relative;
-    }
-    .premium-chat-header .btn-close-white {
-      opacity: 0.8;
-      transition: opacity 0.2s;
-    }
-    .premium-chat-header .btn-close-white:hover {
-      opacity: 1;
-    }
-    .chat-bubble {
-      padding: 12px 16px;
-      border-radius: 20px;
-      font-size: 0.95rem;
-      line-height: 1.5;
-      position: relative;
-      margin-bottom: 0.8rem;
-      word-wrap: break-word; /* Ensure long words break */
-      transition: all 0.25s ease-out; /* Smooth growth */
-    }
-    .chat-bubble.user {
-      background: linear-gradient(135deg, #05b355 0%, #038f42 100%);
-      color: #ffffff;
-      border-bottom-right-radius: 4px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-      transform-origin: bottom right;
-      animation: chatFadeIn 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-    .chat-bubble.user p {
-      color: #ffffff !important;
-    }
-    .chat-bubble.assistant {
-      background-color: var(--theme-bg-card);
-      color: #1a1a1a;
-      border: 1px solid var(--theme-border);
-      border-bottom-left-radius: 4px;
-      box-shadow: 0 2px 8px var(--theme-shadow);
-      transform-origin: bottom left;
-    }
-    /* Only animate the assistant bubble when it first appears (typing indicator phase) */
-    .chat-bubble.assistant:has(.typing-indicator) {
-      animation: chatFadeIn 0.35s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-    }
-    /* Subsequent updates should be stable but gain content smoothly */
-    .chat-bubble.assistant:not(:has(.typing-indicator)) {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-    [data-theme="dark"] .chat-bubble.assistant {
-      background-color: var(--theme-bg-card);
-      color: var(--theme-text);
-      border-color: var(--theme-border);
-    }
-    [data-theme="dark"] .chat-bubble.assistant p {
-      color: var(--theme-text) !important;
-    }
-    .chat-input-wrapper {
-      background-color: var(--theme-bg-card);
-      border-top: 1px solid var(--theme-border);
-      padding: 1rem;
-    }
-    .chat-input-custom {
-      background-color: var(--theme-bg-page) !important;
-      border: 1px solid transparent !important;
-      border-radius: 24px !important;
-      padding: 10px 18px !important;
-      font-size: 0.95rem !important;
-      color: var(--theme-text) !important;
-      transition: border-color 0.2s, box-shadow 0.2s;
-    }
-    .chat-input-custom:focus {
-      border-color: var(--theme-accent) !important;
-      box-shadow: 0 0 0 0.2rem rgba(5, 179, 85, 0.15) !important;
-      outline: none;
-    }
-    [data-theme="dark"] .chat-input-custom {
-      background-color: var(--theme-bg-page) !important;
-    }
-    .chat-input-custom::placeholder {
-      color: var(--theme-text-muted) !important;
-      opacity: 0.7 !important;
-    }
-    [data-theme="dark"] .chat-input-custom::placeholder {
-      color: var(--theme-text-muted) !important;
-      opacity: 0.9 !important;
-    }
-    .btn-send-custom {
-      background-color: var(--theme-accent) !important;
-      color: white !important;
-      border: none !important;
-      border-radius: 50% !important; /* Circular send button */
-      width: 44px;
-      height: 44px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), background-color 0.2s;
-    }
-    .btn-send-custom:hover {
-      transform: scale(1.08);
-      background-color: var(--theme-accent-dark, #038f42) !important;
-    }
-    .btn-send-custom:active {
-      transform: scale(0.95);
-    }
-    @keyframes chatFadeIn {
-      from { opacity: 0; transform: translateY(15px) scale(0.95); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .typing-indicator span {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background-color: var(--theme-text-muted);
-      border-radius: 50%;
-      margin: 0 2px;
-      animation: chatBounce 1.4s infinite ease-in-out both;
-    }
-    .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
-    .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
-    @keyframes chatBounce {
-      0%, 80%, 100% { transform: scale(0); opacity: 0.6; }
-      40% { transform: scale(1); opacity: 1; }
-    }
-    
-    /* Sleek Scrollbar */
-    .premium-scroll::-webkit-scrollbar {
-      width: 5px;
-    }
-    .premium-scroll::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .premium-scroll::-webkit-scrollbar-thumb {
-      background-color: rgba(0,0,0,0.15);
-      border-radius: 10px;
-    }
-    [data-theme="dark"] .premium-scroll::-webkit-scrollbar-thumb {
-      background-color: rgba(255,255,255,0.15);
-    }
-    
-  </style>
-
-  <div class="d-flex flex-column" style="height: 550px; background-color: var(--theme-bg-page);">
+  <div class="d-flex flex-column chat-wrapper">
     <%= turbo_stream_from @chat %>
-    
+
     <!-- Premium Header -->
     <div class="premium-chat-header d-flex justify-content-between align-items-center flex-shrink-0 z-1">
       <div class="d-flex align-items-center">
-        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 42px; height: 42px;">
+        <div class="bg-white rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm chat-header-icon">
           <i class="fa-solid fa-bolt" style="color: var(--theme-accent); font-size: 1.1rem;"></i>
         </div>
         <div>
-          <h6 class="mb-0 fw-bold" style="font-size: 1.05rem; letter-spacing: 0.3px;">Mtracker AI</h6>
-          <div class="d-flex align-items-center" style="opacity: 0.9; font-size: 0.75rem;">
-            <div style="width: 8px; height: 8px; border-radius: 50%; background-color: #4ade80; border: 1.5px solid rgba(255,255,255,0.85); margin-right: 5px;"></div>
+          <h6 class="mb-0 fw-bold chat-header-title">Mtracker AI</h6>
+          <div class="d-flex align-items-center chat-header-status">
+            <div class="chat-status-dot"></div>
             Online e Pronto
           </div>
         </div>
@@ -170,14 +22,14 @@
     </div>
 
     <!-- Messages Area -->
-    <div class="chat-container flex-grow-1 p-3 premium-scroll" id="messages-container" style="overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column;">
+    <div class="chat-container flex-grow-1 p-3 premium-scroll chat-messages-area" id="messages-container">
       <% if @chat.messages.none? %>
         <div class="text-center mt-auto mb-auto" style="color: var(--theme-text-muted);">
-          <div class="rounded-circle p-4 mb-3 d-inline-block" style="background-color: var(--theme-bg-card); box-shadow: 0 8px 20px var(--theme-shadow);">
+          <div class="rounded-circle p-4 mb-3 d-inline-block chat-empty-icon">
             <i class="fa-solid fa-coins fa-2x" style="color: var(--theme-accent);"></i>
           </div>
-          <p class="fw-bold mb-1" style="color: var(--theme-text); font-size: 1.1rem;">Como posso ajudar?</p>
-          <p style="font-size: 0.85rem; max-width: 80%; margin: 0 auto;">Tire dúvidas sobre suas finanças, investimentos ou peça dicas de organização financeira.</p>
+          <p class="fw-bold mb-1 chat-empty-title">Como posso ajudar?</p>
+          <p class="chat-empty-subtitle">Tire dúvidas sobre suas finanças, investimentos ou peça dicas de organização financeira.</p>
         </div>
       <% end %>
 
@@ -197,13 +49,13 @@
   <script>
     (function() {
       var container = document.getElementById("messages-container");
-      
+
       function scrollToBottom() {
         if(container) {
           container.scrollTop = container.scrollHeight;
         }
       }
-      
+
       // Initial scroll
       scrollToBottom();
 
@@ -249,9 +101,8 @@
       if(messagesDiv) {
         var observer = new MutationObserver(function() {
           scrollToBottom();
-          
+
           // Re-enable send button if we detect the assistant message is no longer a placeholder
-          // This is a simple heuristic: if a message with no typing-indicator is added
           var lastMsg = messagesDiv.lastElementChild;
           if (lastMsg && !lastMsg.querySelector('.typing-indicator')) {
              if(submitBtn) {
