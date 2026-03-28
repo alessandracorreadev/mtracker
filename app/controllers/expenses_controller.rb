@@ -2,7 +2,6 @@ class ExpensesController < ApplicationController
   layout "dashboard"
   before_action :authenticate_user!
   before_action :set_expense, only: [:edit, :update, :destroy]
-  before_action :set_existing_expense_types, only: [:new, :create, :edit, :update]
 
   def index
     @expenses = current_user.expenses.order(date: :desc)
@@ -44,13 +43,6 @@ class ExpensesController < ApplicationController
     @expense = current_user.expenses.find(params[:id])
   end
 
-  def set_existing_expense_types
-    @existing_expense_types = current_user.expenses
-      .where.not(expense_type: [nil, ""])
-      .distinct
-      .pluck(:expense_type)
-      .sort
-  end
 
   def expense_params
     params.require(:expense).permit(:description, :value, :date, :expense_type)

@@ -138,7 +138,10 @@ class CreateAiResponseJob < ApplicationJob
       #{recent_transactions.any? ? recent_transactions.join("\n") : "No recent transactions found."}
 
       --- TRANSACTION DETECTION ---
-      If the user describes a financial transaction, append a JSON block at the very end:
+      If the user describes a financial transaction, append a JSON block at the very end.
+      For EXPENSES, you MUST use one of these categories: #{Expense::CATEGORIES.join(", ")}.
+      
+      Examples:
       [TRANSACTION:{"type":"expense","description":"Mercado","value":50.0,"date":"#{Date.today}","category":"Alimentação"}]
       [TRANSACTION:{"type":"investment","description":"Tesouro SELIC","value":1000.0,"date":"#{Date.today}","category":"Renda Fixa","interest_rate":0.12}]
       (NOTE: for investments, always include the interest_rate if mentioned, e.g. 0.12 for 12% per year)
