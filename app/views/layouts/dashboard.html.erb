@@ -47,19 +47,26 @@
             <span class="sidebar-link-text">Salário</span>
           <% end %>
           <% inv_active = request.path.start_with?(investments_path) && !request.path.include?("returns") %>
+
           <%= link_to investments_path, { class: "sidebar-link stagger-reveal #{'active' if inv_active}", title: "Investimentos", "data-reveal-delay" => "4" }.merge(inv_active ? { "aria-current" => "page" } : {}) do %>
             <i class="fa-solid fa-piggy-bank" aria-hidden="true"></i>
             <span class="sidebar-link-text">Investimentos</span>
           <% end %>
-          <% ret_active = request.path.include?("returns") %>
-          <%= link_to returns_investments_path, { class: "sidebar-link stagger-reveal #{'active' if ret_active}", title: "Rendimentos", "data-reveal-delay" => "5" }.merge(ret_active ? { "aria-current" => "page" } : {}) do %>
-            <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
-            <span class="sidebar-link-text">Meus Rendimentos</span>
+
+          <% if Flipper.enabled?(:returns_investments) %>
+            <% ret_active = request.path.include?("returns") %>
+              <%= link_to returns_investments_path, { class: "sidebar-link stagger-reveal #{'active' if ret_active}", title: "Rendimentos", "data-reveal-delay" => "5" }.merge(ret_active ? { "aria-current" => "page" } : {}) do %>
+              <i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i>
+              <span class="sidebar-link-text">Meus Rendimentos</span>
+            <% end %>
           <% end %>
-          <% goals_active = request.path.start_with?(goals_path) %>
-          <%= link_to goals_path, { class: "sidebar-link stagger-reveal #{'active' if goals_active}", title: "Metas", "data-reveal-delay" => "6" }.merge(goals_active ? { "aria-current" => "page" } : {}) do %>
-            <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
-            <span class="sidebar-link-text">Metas</span>
+
+          <% if Flipper.enabled?(:goals) %>
+            <% goals_active = request.path.start_with?(goals_path) %>
+            <%= link_to goals_path, { class: "sidebar-link stagger-reveal #{'active' if goals_active}", title: "Metas", "data-reveal-delay" => "6" }.merge(goals_active ? { "aria-current" => "page" } : {}) do %>
+              <i class="fa-solid fa-bullseye" aria-hidden="true"></i>
+              <span class="sidebar-link-text">Metas</span>
+            <% end %>
           <% end %>
         </nav>
 
@@ -81,7 +88,7 @@
         <%= yield %>
       </main>
     </div>
-    
+
     <% if user_signed_in? %>
       <%= render "shared/chat_widget" %>
     <% end %>

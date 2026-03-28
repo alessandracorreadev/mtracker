@@ -4,6 +4,8 @@ class GoalsController < ApplicationController
   before_action :set_goal, only: [:edit, :update, :destroy]
 
   def index
+    redirect_back(fallback_location:dashboard_path) unless Flipper.enabled?(:goals)
+
     @goals = current_user.goals.order(year: :desc, month: :desc, created_at: :desc)
   end
 

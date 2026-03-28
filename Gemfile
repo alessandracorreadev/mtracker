@@ -53,6 +53,9 @@ gem "simple_form", github: "heartcombo/simple_form"
 gem "sassc-rails"
 gem "devise"
 gem "ruby_llm", "~> 1.14"
+gem 'flipper'
+gem 'flipper-ui'
+gem 'flipper-active_record'
 
 
 group :development, :test do
