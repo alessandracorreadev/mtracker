@@ -1,40 +1,49 @@
-<div class="container">
-<h2>Sign up</h2>
+<section class="auth-page py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="card auth-card border-0 rounded-4 shadow-sm">
+          <div class="card-body p-4 p-md-5">
+            <h1 class="h4 fw-bold text-success mb-1">Criar conta</h1>
+            <p class="text-muted mb-4">Preencha seus dados para começar a usar o MTracker.</p>
 
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { class: "auth-form" }) do |f| %>
+              <%= f.error_notification %>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
-  <%= f.error_notification %>
+              <div class="form-inputs">
+                <%= f.input :name, label: "Nome Completo" %>
 
-  <div class="form-inputs">
+                <%= f.input :birth_date,
+                label: "Data de Nascimento",
+                as: :date,
+                start_year: Date.today.year - 100,
+                end_year: Date.today.year %>
 
-    <%= f.input :name, label: "Nome Completo" %>
+                <%= f.input :email,
+                            label: "Email",
+                            required: true,
+                            autofocus: true,
+                            input_html: { autocomplete: "email" }%>
+                <%= f.input :password,
+                            label: "Senha",
+                            required: true,
+                            hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                            input_html: { autocomplete: "new-password" } %>
+                <%= f.input :password_confirmation,
+                            label: "Confirmar senha",
+                            required: true,
+                            input_html: { autocomplete: "new-password" } %>
+              </div>
 
-    <%= f.input :birth_date,
-    label: "Data de Nascimento",
-    as: :date,
-    start_year: Date.today.year - 100,
-    end_year: Date.today.year %>
+              <div class="form-actions mt-4">
+                <%= f.button :submit, "Criar conta", class: "btn btn-success rounded-pill w-100" %>
+              </div>
+            <% end %>
 
-    <%= f.input :email,
-                label: "Email",
-                required: true,
-                autofocus: true,
-                input_html: { autocomplete: "email" }%>
-    <%= f.input :password,
-                label: "Senha",
-                required: true,
-                hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                label: "Confirmar senha",
-                required: true,
-                input_html: { autocomplete: "new-password" } %>
+            <%= render "devise/shared/links" %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Sign up" %>
-  </div>
-<% end %>
-
-<%= render "devise/shared/links" %>
-</div>
+</section>

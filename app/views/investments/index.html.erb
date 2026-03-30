@@ -4,10 +4,31 @@
       <h1 class="dashboard-title text-success fw-bolder">Aportes</h1>
       <p class="dashboard-subtitle text-muted mb-0">Acompanhamento de seus investimentos</p>
     </div>
-    <%= link_to new_investment_path, class: "btn btn-primary" do %>
+    <div class="d-flex gap-2 align-items-center flex-wrap">
+      <%= form_with url: investments_path, method: :get, local: true, class: "period-filter" do %>
+        <span class="period-filter-icon">
+          <i class="fa-regular fa-calendar"></i>
+        </span>
+        <div class="period-filter-selects">
+          <%= select_tag :month, options_for_select(@months, @selected_month), class: "form-select form-select-sm period-select period-select-month" %>
+          <%= select_tag :year, options_for_select(@years, @selected_year), class: "form-select form-select-sm period-select period-select-year" %>
+        </div>
+        <%= button_tag type: "submit", class: "btn btn-success btn-sm period-filter-btn px-3" do %>
+          <i class="fa-solid fa-filter me-1"></i> Filtrar
+        <% end %>
+      <% end %>
+      <% if @is_filtered %>
+        <%= link_to investments_path, class: "btn btn-outline-secondary btn-sm px-3" do %>
+          <i class="fa-solid fa-list me-1"></i> Ver Todos
+        <% end %>
+      <% end %>
+    </div>
+  </header>
+  <div class="d-flex gap-2 mb-4">
+    <%= link_to new_investment_path, class: "btn btn-success rounded-pill px-3" do %>
       <i class="fa-solid fa-plus me-1"></i> Novo investimento
     <% end %>
-  </header>
+  </div>
 
   <% if @investments.any? %>
     <% @investments_by_month.each do |month, investments| %>
@@ -19,7 +40,7 @@
         </div>
         <div class="list-cards-wrapper">
           <% investments.each do |investment| %>
-            <div class="list-item-card p-3 d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
+            <div class="list-item-card d-flex align-items-center justify-content-between gap-3 flex-wrap flex-md-nowrap">
               <div class="d-flex align-items-center gap-3 overflow-hidden" style="min-width: 0;">
                 <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 bg-primary bg-opacity-10 text-primary" style="width: 46px; height: 46px;">
                   <i class="fa-solid fa-chart-line fs-5"></i>
@@ -40,7 +61,7 @@
 
               <div class="d-flex align-items-center gap-3 flex-shrink-0 ms-auto">
                 <span class="fw-bold text-primary fs-6 text-nowrap"><%= number_to_currency(investment.value, unit: "R$ ") %></span>
-                
+
                 <div class="d-none d-md-flex gap-1">
                   <%= link_to edit_investment_path(investment), class: "btn btn-sm btn-outline-secondary border-0 rounded-circle", style: "width: 38px; height: 38px; display: flex; align-items: center; justify-content: center;", title: "Editar" do %>
                     <i class="fa-solid fa-pen"></i>
@@ -50,7 +71,7 @@
                     <i class="fa-solid fa-trash"></i>
                   <% end %>
                 </div>
-                
+
                 <div class="dropdown d-md-none">
                   <button class="btn btn-sm btn-link text-muted px-2 border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-ellipsis-vertical"></i>
