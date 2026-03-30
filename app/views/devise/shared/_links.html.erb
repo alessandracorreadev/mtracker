@@ -1,25 +1,32 @@
-<%- if controller_name != 'sessions' %>
-  <p><%= link_to "Log in", new_session_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.registerable? && controller_name != 'registrations' %>
-  <p><%= link_to "Sign up", new_registration_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
-  <p><%= link_to "Forgot your password?", new_password_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
-  <p><%= link_to "Didn't receive confirmation instructions?", new_confirmation_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
-  <p><%= link_to "Didn't receive unlock instructions?", new_unlock_path(resource_name) %></p>
-<% end %>
-
-<%- if devise_mapping.omniauthable? %>
-  <%- resource_class.omniauth_providers.each do |provider| %>
-    <p><%= button_to "Sign in with #{OmniAuth::Utils.camelize(provider)}", omniauth_authorize_path(resource_name, provider), data: { turbo: false } %></p>
+<div class="auth-links mt-4 pt-3 border-top">
+  <%- if controller_name != 'sessions' %>
+    <p class="mb-2"><%= link_to "Entrar", new_session_path(resource_name), class: "auth-link" %></p>
   <% end %>
-<% end %>
+
+  <%- if devise_mapping.registerable? && controller_name != 'registrations' %>
+    <p class="mb-2"><%= link_to "Criar conta", new_registration_path(resource_name), class: "auth-link" %></p>
+  <% end %>
+
+  <%- if devise_mapping.recoverable? && controller_name != 'passwords' && controller_name != 'registrations' %>
+    <p class="mb-2"><%= link_to "Esqueceu sua senha?", new_password_path(resource_name), class: "auth-link" %></p>
+  <% end %>
+
+  <%- if devise_mapping.confirmable? && controller_name != 'confirmations' %>
+    <p class="mb-2"><%= link_to "Não recebeu instruções de confirmação?", new_confirmation_path(resource_name), class: "auth-link" %></p>
+  <% end %>
+
+  <%- if devise_mapping.lockable? && resource_class.unlock_strategy_enabled?(:email) && controller_name != 'unlocks' %>
+    <p class="mb-2"><%= link_to "Não recebeu instruções de desbloqueio?", new_unlock_path(resource_name), class: "auth-link" %></p>
+  <% end %>
+
+  <%- if devise_mapping.omniauthable? %>
+    <%- resource_class.omniauth_providers.each do |provider| %>
+      <p class="mb-0 mt-3">
+        <%= button_to "Entrar com #{OmniAuth::Utils.camelize(provider)}",
+            omniauth_authorize_path(resource_name, provider),
+            class: "btn btn-outline-secondary rounded-pill w-100",
+            data: { turbo: false } %>
+      </p>
+    <% end %>
+  <% end %>
+</div>

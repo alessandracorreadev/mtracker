@@ -4,8 +4,23 @@ class ExpensesController < ApplicationController
   before_action :set_expense, only: [:edit, :update, :destroy]
 
   def index
-    @expenses = current_user.expenses.order(date: :desc)
+    @selected_year  = params[:year].present?  ? params[:year].to_i  : Date.current.year
+    @selected_month = params[:month].present? ? params[:month].to_i : Date.current.month
+    @is_filtered = params[:month].present? || params[:year].present?
+
+    if @is_filtered
+      start_date = Date.new(@selected_year, @selected_month, 1)
+      end_date   = start_date.end_of_month
+      @expenses = current_user.expenses.where(date: start_date..end_date).order(date: :desc)
+    else
+      @expenses = current_user.expenses.order(date: :desc)
+    end
+
     @expenses_by_month = @expenses.group_by { |e| e.date.beginning_of_month }.sort_by { |month, _| month }.reverse
+
+    @years  = (2020..Date.current.year).to_a.reverse
+    month_names = %w[Janeiro Fevereiro Março Abril Maio Junho Julho Agosto Setembro Outubro Novembro Dezembro]
+    @months = (1..12).map { |m| [month_names[m - 1], m] }
   end
 
   def new

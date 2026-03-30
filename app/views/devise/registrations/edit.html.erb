@@ -1,35 +1,58 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<section class="auth-page py-5">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+        <div class="card auth-card border-0 rounded-4 shadow-sm">
+          <div class="card-body p-4 p-md-5">
+            <h1 class="h4 fw-bold text-success mb-1">Editar conta</h1>
+            <p class="text-muted mb-4">Atualize seus dados de acesso com segurança.</p>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
+            <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, class: "auth-form" }) do |f| %>
+              <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email, required: true, autofocus: true %>
+              <div class="form-inputs">
+                <%= f.input :email, required: true, autofocus: true %>
 
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
-    <% end %>
+                <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+                  <div class="alert alert-warning py-2 small rounded-3 mb-3">
+                    Aguardando confirmação para: <strong><%= resource.unconfirmed_email %></strong>
+                  </div>
+                <% end %>
 
-    <%= f.input :password,
-                hint: "leave it blank if you don't want to change it",
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :current_password,
-                hint: "we need your current password to confirm your changes",
-                required: true,
-                input_html: { autocomplete: "current-password" } %>
+                <%= f.input :password,
+                            hint: "Deixe em branco se não quiser alterar",
+                            required: false,
+                            input_html: { autocomplete: "new-password" } %>
+                <%= f.input :password_confirmation,
+                            label: "Confirmar nova senha",
+                            required: false,
+                            input_html: { autocomplete: "new-password" } %>
+                <%= f.input :current_password,
+                            hint: "Informe sua senha atual para confirmar as alterações",
+                            required: true,
+                            input_html: { autocomplete: "current-password" } %>
+              </div>
+
+              <div class="form-actions mt-4">
+                <%= f.button :submit, "Atualizar conta", class: "btn btn-success rounded-pill w-100" %>
+              </div>
+            <% end %>
+
+            <div class="auth-account-actions mt-4 pt-4 border-top">
+              <h2 class="h6 fw-bold text-danger mb-2">Encerrar conta</h2>
+              <p class="small text-muted mb-3">Essa ação é permanente e removerá o acesso à sua conta.</p>
+              <%= button_to "Cancelar minha conta", registration_path(resource_name),
+                  class: "btn btn-outline-danger rounded-pill px-3",
+                  data: { confirm: "Tem certeza?", turbo_confirm: "Tem certeza?" },
+                  method: :delete %>
+            </div>
+
+            <div class="auth-links mt-4">
+              <%= link_to "Voltar", :back, class: "auth-link" %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</section>
