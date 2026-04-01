@@ -12,7 +12,7 @@
         <%= select_tag :month, options_for_select(@months, @selected_month), class: "form-select form-select-sm period-select period-select-month" %>
         <%= select_tag :year, options_for_select(@years, @selected_year), class: "form-select form-select-sm period-select period-select-year" %>
       </div>
-      <%= button_tag type: "submit", class: "btn btn-success btn-sm period-filter-btn px-3" do %>
+      <%= button_tag type: "submit", class: "btn button-green btn-sm period-filter-btn px-3" do %>
         <i class="fa-solid fa-filter me-1"></i> Filtrar
       <% end %>
     <% end %>

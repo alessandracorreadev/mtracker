@@ -4,6 +4,8 @@ class ExpensesController < ApplicationController
   before_action :set_expense, only: [:edit, :update, :destroy]
 
   def index
+    @expense = current_user.expenses.new
+    
     @selected_year  = params[:year].present?  ? params[:year].to_i  : Date.current.year
     @selected_month = params[:month].present? ? params[:month].to_i : Date.current.month
     @is_filtered = params[:month].present? || params[:year].present?
