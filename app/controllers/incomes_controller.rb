@@ -5,6 +5,8 @@ class IncomesController < ApplicationController
   before_action :set_existing_income_types, only: [:new, :create, :edit, :update]
 
   def index
+    @income = current_user.incomes.new
+    
     @selected_year  = params[:year].present?  ? params[:year].to_i  : Date.current.year
     @selected_month = params[:month].present? ? params[:month].to_i : Date.current.month
     @is_filtered = params[:month].present? || params[:year].present?

@@ -5,6 +5,8 @@ class InvestmentsController < ApplicationController
   before_action :set_existing_investment_types, only: [:new, :create, :edit, :update]
 
   def index
+    @investment = current_user.investments.new
+    
     @selected_year  = params[:year].present?  ? params[:year].to_i  : Date.current.year
     @selected_month = params[:month].present? ? params[:month].to_i : Date.current.month
     @is_filtered = params[:month].present? || params[:year].present?
