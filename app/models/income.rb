@@ -1,4 +1,6 @@
 class Income < ApplicationRecord
+  CATEGORIES = ["Salário", "Vale", "Comissão", "Hora Extra", "Freelance", "Outros"].freeze
+
   belongs_to :user
 
   # Invalidate the AI system prompt cache when financial data changes

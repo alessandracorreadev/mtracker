@@ -1,4 +1,6 @@
 class Investment < ApplicationRecord
+  CATEGORIES = ["Renda Fixa", "Renda Variável", "Fundos de Investimento", "Previdência Privada", "Outros"].freeze
+
   belongs_to :user
 
   # Invalidate the AI system prompt cache when financial data changes

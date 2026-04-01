@@ -15,7 +15,7 @@
     </datalist>
     <datalist id="investment-categories-datalist">
       <option value="Total">
-      <% current_user.investments.select(:investment_type).distinct.pluck(:investment_type).compact.reject(&:blank?).uniq.sort.each do |cat| %>
+      <% Investment::CATEGORIES.each do |cat| %>
         <option value="<%= cat %>">
       <% end %>
     </datalist>
