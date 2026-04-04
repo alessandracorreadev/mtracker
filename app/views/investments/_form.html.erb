@@ -2,7 +2,7 @@
   <%= f.input :date, as: :string, label: "Data", input_html: { type: "date" } %>
   <%= f.input :value, label: "Valor (R$)", input_html: { step: "0.01", min: "0" } %>
   <%= f.input :investment_type, label: "Categoria", as: :select, collection: Investment::CATEGORIES, prompt: "Selecione uma categoria" %>
-  <%= f.input :interest_rate, label: "Taxa de Juros (% a.a.)", input_html: { step: "0.0001", min: "0", placeholder: "Ex: 12.5" } %>
+  <!-- <%= f.input :interest_rate, label: "Taxa de Juros (% a.a.)", input_html: { step: "0.0001", min: "0", placeholder: "Ex: 12.5" } %> -->
   <%= f.input :description, label: "Descrição", input_html: { rows: 2 } %>
   <div class="d-flex flex-wrap gap-2 mt-3">
     <%= f.button :submit, @investment.persisted? ? "Atualizar investimento" : "Cadastrar investimento", class: "btn button-green" %>

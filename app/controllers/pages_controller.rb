@@ -16,16 +16,15 @@ class PagesController < ApplicationController
     @incomes     = current_user.incomes.where(date: start_date..end_date)
     @investments = current_user.investments.where(date: start_date..end_date)
 
-    @total_expenses    = @expenses.sum(:value)
+    expenses_by_category = @expenses.group(:expense_type).sum(:value)
+    @expenses_by_category = Expense::CATEGORIES.map do |category|
+      { name: category, total: expenses_by_category.fetch(category, 0) }
+    end
+
+    @total_expenses    = @expenses_by_category.sum { |item| item[:total] }
     @total_incomes     = @incomes.sum(:value)
     @total_investments = @investments.sum(:value)
     @balance           = @total_incomes - @total_expenses - @total_investments
-
-    @expenses_by_category = @expenses
-      .where.not(expense_type: [nil, ""])
-      .group(:expense_type)
-      .sum(:value)
-      .map { |name, total| { name: name, total: total } }
 
     @incomes_by_category = @incomes
       .where.not(income_type: [nil, ""])
