@@ -14,6 +14,7 @@
   --theme-shadow: rgba(0, 0, 0, 0.06);
   --theme-accent: #048d43;
   --theme-accent-dark: #026d34;
+  --theme-accent-rgb: 4, 141, 67;
   --theme-success: #048d43;
   --theme-danger: #dc3545;
 }
@@ -40,6 +41,7 @@ body {
   --theme-shadow: rgba(0, 0, 0, 0.5);
   --theme-accent: #05b355;
   --theme-accent-dark: #026d34;
+  --theme-accent-rgb: 5, 179, 85;
 }
 
 // Apply theme to common components

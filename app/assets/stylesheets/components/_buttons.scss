@@ -3,3 +3,39 @@
   color: #ffffff;
   border-radius: 8px;
 }
+
+.btn-custom-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  font-weight: 700;
+  color: #ffffff !important;
+  background-color: var(--theme-accent);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(var(--theme-accent-rgb), 0.25);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-decoration: none;
+
+  i {
+    font-size: 1.1rem;
+    opacity: 0.95;
+  }
+
+  &:hover {
+    background-color: var(--theme-accent);
+    filter: brightness(0.9);
+    box-shadow: 0 6px 15px rgba(var(--theme-accent-rgb), 0.35);
+    transform: translateY(-1px);
+    color: #ffffff !important;
+  }
+
+  &:active {
+    transform: translateY(0);
+    filter: brightness(0.85);
+    box-shadow: 0 2px 8px rgba(var(--theme-accent-rgb), 0.2);
+  }
+}

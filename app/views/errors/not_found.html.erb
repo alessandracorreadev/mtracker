@@ -1,0 +1,24 @@
+<div class="container d-flex flex-column align-items-center justify-content-center min-vh-100 text-center py-5">
+  <div class="mb-4">
+    <h1 class="display-1 fw-bold text-muted opacity-25" style="font-size: 8rem; letter-spacing: -5px;">404</h1>
+  </div>
+
+  <div class="mb-5 position-relative">
+    <h2 class="h1 fw-bold mb-3" style="color: var(--theme-text);">Ops! Rastreamos até aqui, mas a página sumiu.</h2>
+    <p class="lead text-muted mx-auto" style="max-width: 600px;">
+      Parece que você seguiu um rastro que não existe. Não se preocupe, suas finanças continuam seguras!
+    </p>
+  </div>
+
+  <div class="d-flex gap-3">
+    <%= link_to root_path, class: "btn-custom-action" do %>
+      <i class="bi bi-house-door-fill"></i>
+      Voltar para o Início
+    <% end %>
+
+    <%= link_to "javascript:history.back()", class: "btn btn-outline-secondary rounded-4 px-4 py-2 border-2 fw-semibold d-inline-flex align-items-center gap-2", style: "border-radius: 12px;" do %>
+      <i class="bi bi-arrow-left"></i>
+      Página Anterior
+    <% end %>
+  </div>
+</div>
