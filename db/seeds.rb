@@ -17,11 +17,6 @@ start_date = Date.new(2024, 1, 1)
 end_date = Date.new(2026, 3, 31)
 current_month = start_date
 
-# Categorias
-income_categories = ["Salário", "Freelance", "Rendimentos", "Cashback", "Reembolso", "Bônus", "Vendas"]
-expense_categories = ["Moradia", "Alimentação", "Transporte", "Lazer", "Saúde", "Educação", "Pessoal", "Pets", "Taxas", "Doações"]
-investment_categories = ["Tesouro Direto", "CDB", "LCI", "Fundo Imobiliário (FII)", "Ações do Brasil", "Ações Internacionais (BDR)", "Criptomoedas", "Reserva de Emergência"]
-
 # Dados base
 salario_base = 6500.00
 aluguel = 1800.00
@@ -40,7 +35,7 @@ while current_month <= end_date
   # ==========================================
   # RENDAS (Incomes)
   # ==========================================
-  
+
   # Salário mensal fixo
   user.incomes.create!(
     date: current_month.change(day: 5),
@@ -54,7 +49,7 @@ while current_month <= end_date
     user.incomes.create!(
       date: current_month.change(day: 20),
       value: (salario_base * 0.5).round(2),
-      income_type: "Bônus",
+      income_type: "Comissão",
       description: current_month.month == 12 ? "13º Salário (2ª Parcela)" : "Recesso de Meio de Ano"
     )
   end
@@ -69,11 +64,11 @@ while current_month <= end_date
     )
   end
 
-  # Pequenas entradas (Cashback, Vendas)
+  # Pequenas entradas compatíveis com a coleção atual
   user.incomes.create!(
     date: current_month.change(day: rand(10..28)),
     value: rand(20.0..150.0).round(2),
-    income_type: ["Cashback", "Vendas", "Reembolso"].sample,
+    income_type: ["Vale", "Hora Extra", "Outros"].sample,
     description: "Entrada Avulsa"
   )
 
@@ -118,7 +113,7 @@ while current_month <= end_date
   end
 
   # Transporte (Gasolina/Uber)
-  4.times do 
+  4.times do
     user.expenses.create!(
       date: current_month.change(day: rand(1..28)),
       value: rand(40.0..180.0).round(2),
@@ -153,25 +148,25 @@ while current_month <= end_date
   # ==========================================
   # INVESTIMENTOS (Investments)
   # ==========================================
-  
+
   # Aporte Fixo em Reserva
   user.investments.create!(
     date: current_month.change(day: 10),
     value: 500.00,
-    investment_type: "Reserva de Emergência",
-    description: "Aporte Mensal CDB Liquidez Inter",
+    investment_type: "Renda Fixa",
+    description: "Aporte Mensal para Reserva de Emergência",
     interest_rate: 11.5
   )
 
   # Diversificação do Mês
   rand(1..3).times do
     inv = [
-      { t: "Fundo Imobiliário (FII)", rate: rand(9.0..12.5), desc: ["HGLG11 - Logística", "KNRI11 - Salas", "MXRF11 - Papel", "VISC11 - Shopping"].sample },
-      { t: "Ações do Brasil", rate: rand(8.0..18.0), desc: ["ITUB4", "WEGE3", "VALE3", "PETR4", "EGIE3 Energia"].sample },
-      { t: "CDB", rate: rand(12.0..14.5), desc: "CDB IPCA+ Banco Master" },
-      { t: "Ações Internacionais (BDR)", rate: rand(10.0..25.0), desc: ["AAPL34 Apple", "MSFT34 Microsoft", "GOGL34 Google", "AMZO34 Amazon"].sample },
-      { t: "Criptomoedas", rate: rand(15.0..60.0), desc: ["Bitcoin (BTC) Frio", "Ethereum (ETH) Staking"].sample },
-      { t: "Tesouro Direto", rate: rand(10.0..13.0), desc: "Tesouro IPCA+ 2035" }
+      { t: "Fundos de Investimento", rate: rand(8.0..12.5), desc: ["FII de Logística", "FII de Shoppings", "Fundo Multimercado", "Fundo de Papel"].sample },
+      { t: "Renda Variável", rate: rand(8.0..18.0), desc: ["Ações de Bancos", "Ações de Energia", "Ações de Tecnologia", "BDRs de Tecnologia"].sample },
+      { t: "Renda Fixa", rate: rand(10.0..14.5), desc: ["CDB IPCA+", "Tesouro IPCA+", "LCI com Liquidez", "CDB Pós-fixado"].sample },
+      { t: "Renda Variável", rate: rand(10.0..25.0), desc: ["Carteira Internacional", "BDR de Tecnologia", "ETF Global"].sample },
+      { t: "Outros", rate: rand(15.0..60.0), desc: ["Cripto em custódia", "Alocação Tática", "Aporte Oportunístico"].sample },
+      { t: "Previdência Privada", rate: rand(7.0..11.0), desc: "Contribuição PGBL" }
     ].sample
 
     user.investments.create!(
@@ -212,12 +207,12 @@ while current_goal_month <= goal_end_date
     year: current_goal_month.year,
     category: "Lazer"
   )
-  
+
   # As vezes uma meta de renda (freelancers, vendas)
   if rand < 0.5
     user.goals.create!(
       description: "Tirar renda de Freelance Extra",
-      goal_type: "savings", 
+      goal_type: "savings",
       target_value: rand(800.0..1500.0).round(2),
       month: current_goal_month.month,
       year: current_goal_month.year
