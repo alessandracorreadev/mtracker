@@ -25,10 +25,10 @@
     <div class="dashboard-layout-shell">
       <aside id="dashboard-sidebar" class="dashboard-sidebar" data-sidebar-target="sidebar" aria-label="Navegação">
         <div class="sidebar-brand">
-          <i class="fa-solid fa-chart-pie sidebar-brand-icon text-success" aria-hidden="true"></i>
-          <span class="sidebar-brand-text fw-bold">MTracker</span>
+          <%= image_tag "mtracker_logo-removebg.png", class: "sidebar-brand-logo", alt: "MTracker" %>
         </div>
-        <p class="sidebar-email text-muted small"><%= current_user&.email %></p>
+        <% first_name = current_user&.name.to_s.split.first.presence || current_user&.email.to_s.split("@").first %>
+        <p class="sidebar-email text-muted small">Olá, <%= first_name.to_s.titleize %></p>
 
         <nav class="sidebar-nav" aria-label="Menu principal">
           <% dash_active = current_page?(dashboard_path) %>

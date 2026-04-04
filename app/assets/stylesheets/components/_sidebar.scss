@@ -86,23 +86,16 @@
   .sidebar-brand {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
     padding-bottom: 0.85rem;
     margin-bottom: 0.5rem;
     border-bottom: 1px solid var(--theme-border);
-    font-weight: 700;
-    font-size: 1.05rem;
     flex-shrink: 0;
 
-    .sidebar-brand-icon {
-      color: var(--theme-accent);
-      font-size: 1.35rem;
-      flex-shrink: 0;
-    }
-
-    .sidebar-brand-text {
-      color: var(--theme-text);
-      line-height: 1.2;
+    .sidebar-brand-logo {
+      display: block;
+      width: 150px;
+      max-width: 100%;
+      height: auto;
     }
   }
 
