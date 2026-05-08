@@ -31,17 +31,29 @@ A modern web-based financial tracking platform designed to help users organize e
 
 ## Screenshots
 
+### Landing Page
+
+![Dashboard](images/landingpagemt.png)
+
 ### Dashboard
 
-![Dashboard](images/dashboard.png)
+![Financial Overview](images/dashboardmt.png)
 
-### Financial Overview
+![Financial Overview](images/dashboardmtdark.png)
 
-![Financial Overview](images/financial-overview.png)
 
-### Expense Tracking
+### Expense
 
-![Expense Tracking](images/expense-tracking.png)
+![Expense Tracking](images/despesasmt.png)
+
+### Income
+
+![Expense Tracking](images/entradasmt.png)
+
+### Investments
+
+![Expense Tracking](images/aportesmt.png)
+
 
 ---
 
